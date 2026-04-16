@@ -4,9 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TrackYourTrades v10</title>
-
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@600;700;800;900&display=swap');
 
     :root {
       --bg: #141518;
@@ -14,6 +13,7 @@
       --bg3: #1f222a;
       --bg4: #252936;
       --panel: #1b1e25;
+      --panel2: #202430;
       --border: #2b3040;
       --border2: #32394b;
       --text: #e7ebf5;
@@ -23,7 +23,7 @@
       --loss: #f0484a;
       --accent: #4f7cff;
       --gold: #f0b429;
-      --shadow: 0 14px 36px rgba(0, 0, 0, 0.32);
+      --shadow: 0 14px 36px rgba(0,0,0,0.32);
       --r: 15px;
       --gap: 14px;
     }
@@ -313,21 +313,20 @@
     .widget.wide { grid-column: span 6; }
     .widget.full { grid-column: span 12; }
 
-    /* Titles use hover text directly on the title line */
+    /* Title hover tooltip on the widget name itself */
     .w-title {
       display: inline-flex;
       align-items: center;
-      gap: 0;
       font-size: 13px;
       font-weight: 800;
       letter-spacing: 0.01em;
       font-family: "Inter Tight", Inter, system-ui, sans-serif;
       line-height: 1;
-      color: #e4e8f2;
+      color: #cfd5e2;
       margin-bottom: 12px;
       position: relative;
       cursor: help;
-      padding-right: 2px;
+      user-select: none;
     }
     .w-title:hover::after {
       content: attr(data-tip);
@@ -555,9 +554,7 @@
       <div class="top-right">
         <div class="greeting" id="greeting">Hey, <em>Vance</em></div>
         <div class="pill">
-          <select id="accountSelect">
-            <option>Main</option>
-          </select>
+          <select id="accountSelect"><option>Main</option></select>
           <strong id="accountValue">$4,000</strong>
         </div>
         <button class="btn alt" id="exportBtn">CSV</button>
@@ -607,42 +604,20 @@
         </div>
 
         <div class="grid stats">
-          <div class="card stat">
-            <div class="label">Total P&L <span>closed</span></div>
-            <div class="val" id="statPnl">—</div>
-            <div class="meta" id="statPnlMeta">—</div>
-          </div>
-          <div class="card stat">
-            <div class="label">Return <span>vs start</span></div>
-            <div class="val" id="statRet">—</div>
-            <div class="meta" id="statRetMeta">—</div>
-          </div>
-          <div class="card stat">
-            <div class="label">Win Rate <span>consistency</span></div>
-            <div class="val" id="statWr">—</div>
-            <div class="meta" id="statWrMeta">—</div>
-          </div>
-          <div class="card stat">
-            <div class="label">Avg Win / Loss <span>edge</span></div>
-            <div class="val" id="statRr">—</div>
-            <div class="meta" id="statRrMeta">—</div>
-          </div>
-          <div class="card stat">
-            <div class="label">Trades <span>in period</span></div>
-            <div class="val" id="statTrades">—</div>
-            <div class="meta" id="statTradeMeta">—</div>
-          </div>
+          <div class="card stat"><div class="label">Total P&L <span>closed</span></div><div class="val" id="statPnl">—</div><div class="meta" id="statPnlMeta">—</div></div>
+          <div class="card stat"><div class="label">Return <span>vs start</span></div><div class="val" id="statRet">—</div><div class="meta" id="statRetMeta">—</div></div>
+          <div class="card stat"><div class="label">Win Rate <span>consistency</span></div><div class="val" id="statWr">—</div><div class="meta" id="statWrMeta">—</div></div>
+          <div class="card stat"><div class="label">Avg Win / Loss <span>edge</span></div><div class="val" id="statRr">—</div><div class="meta" id="statRrMeta">—</div></div>
+          <div class="card stat"><div class="label">Trades <span>in period</span></div><div class="val" id="statTrades">—</div><div class="meta" id="statTradeMeta">—</div></div>
         </div>
 
         <div class="grid two" style="margin-top:14px;">
           <div class="card">
             <div class="section-head" style="margin-bottom:12px;">
               <div>
-                <div class="w-title" data-tip="Progress versus target and pace">Goal Trajectory</div>
+                <div class="w-title" data-tip="Actual equity versus target and projected pace">Goal Trajectory</div>
               </div>
-              <div class="toolbar">
-                <button class="btn alt" id="toggleGoalBtn">Show Goal</button>
-              </div>
+              <div class="toolbar"><button class="btn alt" id="toggleGoalBtn">Show Goal</button></div>
             </div>
             <div class="placeholder" style="height:260px;">chart</div>
             <div id="goalStatus" style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;"></div>
@@ -651,7 +626,7 @@
           <div class="card">
             <div class="section-head" style="margin-bottom:12px;">
               <div>
-                <div class="w-title" data-tip="Pattern summaries from your trade history">Behavior Analytics</div>
+                <div class="w-title" data-tip="Summary patterns from your trade behavior">Behavior Analytics</div>
               </div>
             </div>
             <div id="insightsList" class="mini-list">
@@ -661,30 +636,11 @@
         </div>
 
         <div class="grid widgets">
-          <div class="card widget wide">
-            <div class="w-title" data-tip="Daily performance within the selected range">Daily P&L</div>
-            <div class="placeholder"></div>
-          </div>
-
-          <div class="card widget wide">
-            <div class="w-title" data-tip="Performance grouped by symbol">Ticker Performance</div>
-            <div class="placeholder"></div>
-          </div>
-
-          <div class="card widget wide">
-            <div class="w-title" data-tip="Win and loss streak patterns">Streak Profile</div>
-            <div class="placeholder"></div>
-          </div>
-
-          <div class="card widget wide">
-            <div class="w-title" data-tip="Most recent entries and edits">Recent Trades</div>
-            <div class="placeholder"></div>
-          </div>
-
-          <div class="card widget full">
-            <div class="w-title" data-tip="Best and worst setup context">Setup Breakdown</div>
-            <div class="placeholder"></div>
-          </div>
+          <div class="card widget wide"><div class="w-title" data-tip="Daily performance within the selected range">Daily P&L</div><div class="placeholder"></div></div>
+          <div class="card widget wide"><div class="w-title" data-tip="Performance grouped by ticker">Ticker Performance</div><div class="placeholder"></div></div>
+          <div class="card widget wide"><div class="w-title" data-tip="Win and loss streak patterns">Streak Profile</div><div class="placeholder"></div></div>
+          <div class="card widget wide"><div class="w-title" data-tip="Most recent entries and edits">Recent Trades</div><div class="placeholder"></div></div>
+          <div class="card widget full"><div class="w-title" data-tip="Best and worst setup context">Setup Breakdown</div><div class="placeholder"></div></div>
         </div>
       </section>
 
@@ -700,9 +656,7 @@
 
         <div class="toolbar" style="margin-bottom:12px;">
           <button class="btn alt" id="prevMonthBtn">‹</button>
-          <div class="pill" style="min-width:160px;justify-content:center;">
-            <strong id="monthLabel">—</strong>
-          </div>
+          <div class="pill" style="min-width:160px;justify-content:center;"><strong id="monthLabel">—</strong></div>
           <button class="btn alt" id="nextMonthBtn">›</button>
           <div class="seg" style="margin-left:auto;">
             <button class="active" data-calview="month">Month</button>
@@ -713,9 +667,7 @@
         <div class="calendar-shell">
           <div class="card">
             <div class="sub" id="calendarSummary">—</div>
-            <div id="calendarContent" style="margin-top:12px;">
-              <div class="placeholder">calendar</div>
-            </div>
+            <div id="calendarContent" style="margin-top:12px;"><div class="placeholder">calendar</div></div>
           </div>
 
           <aside class="card side" id="dayPanel">
@@ -726,16 +678,12 @@
               <button class="btn alt" id="closeDayBtn">×</button>
             </div>
 
-            <div id="dayTrades" class="mini-list">
-              <div class="placeholder">day</div>
-            </div>
+            <div id="dayTrades" class="mini-list"><div class="placeholder">day</div></div>
 
             <div style="margin-top:14px;">
               <label class="note">Session journal</label>
               <textarea id="dayJournal" rows="6" style="width:100%;margin-top:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:14px;padding:12px;resize:vertical;" placeholder="..."></textarea>
-              <div style="display:flex;justify-content:flex-end;margin-top:8px;">
-                <button class="btn" id="saveJournalBtn">Save note</button>
-              </div>
+              <div style="display:flex;justify-content:flex-end;margin-top:8px;"><button class="btn" id="saveJournalBtn">Save note</button></div>
             </div>
           </aside>
         </div>
@@ -757,22 +705,10 @@
 
         <div class="card" style="margin-bottom:14px;">
           <div class="grid" style="grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;">
-            <div>
-              <label class="note">Search</label>
-              <input id="tradeSearch" placeholder="ticker, notes, tag…" style="width:100%;margin-top:6px;" />
-            </div>
-            <div>
-              <label class="note">Ticker</label>
-              <input id="tradeTicker" placeholder="AAPL" style="width:100%;margin-top:6px;" />
-            </div>
-            <div>
-              <label class="note">Tag</label>
-              <input id="tradeTag" placeholder="breakout" style="width:100%;margin-top:6px;" />
-            </div>
-            <div>
-              <label class="note">P&L filter</label>
-              <input id="tradePnlFilter" placeholder=">100 or <-50" style="width:100%;margin-top:6px;" />
-            </div>
+            <div><label class="note">Search</label><input id="tradeSearch" placeholder="ticker, notes, tag…" style="width:100%;margin-top:6px;" /></div>
+            <div><label class="note">Ticker</label><input id="tradeTicker" placeholder="AAPL" style="width:100%;margin-top:6px;" /></div>
+            <div><label class="note">Tag</label><input id="tradeTag" placeholder="breakout" style="width:100%;margin-top:6px;" /></div>
+            <div><label class="note">P&L filter</label><input id="tradePnlFilter" placeholder=">100 or <-50" style="width:100%;margin-top:6px;" /></div>
           </div>
         </div>
 
@@ -781,22 +717,10 @@
             <table>
               <thead>
                 <tr>
-                  <th data-sort="date">Date</th>
-                  <th data-sort="sym">Ticker</th>
-                  <th data-sort="assetType">Type</th>
-                  <th data-sort="tags">Tags</th>
-                  <th data-sort="pnl">P&L</th>
-                  <th data-sort="pct">% G/L</th>
-                  <th data-sort="entry">Entry</th>
-                  <th data-sort="exit">Exit</th>
-                  <th data-sort="qty">Qty</th>
-                  <th data-sort="acct">Account</th>
-                  <th>Notes</th>
+                  <th data-sort="date">Date</th><th data-sort="sym">Ticker</th><th data-sort="assetType">Type</th><th data-sort="tags">Tags</th><th data-sort="pnl">P&L</th><th data-sort="pct">% G/L</th><th data-sort="entry">Entry</th><th data-sort="exit">Exit</th><th data-sort="qty">Qty</th><th data-sort="acct">Account</th><th>Notes</th>
                 </tr>
               </thead>
-              <tbody id="tradeBody">
-                <tr><td colspan="11" style="padding:18px;color:var(--muted);text-align:center;">trade table</td></tr>
-              </tbody>
+              <tbody id="tradeBody"><tr><td colspan="11" style="padding:18px;color:var(--muted);text-align:center;">trade table</td></tr></tbody>
             </table>
           </div>
         </div>
@@ -813,18 +737,9 @@
         </div>
 
         <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;">
-          <div class="card">
-            <div class="w-title" data-tip="First-time workflow">Quick Start</div>
-            <div class="note">Import, log, export.</div>
-          </div>
-          <div class="card">
-            <div class="w-title" data-tip="Local-first storage and backup">Privacy</div>
-            <div class="note">Browser-only, no cloud database.</div>
-          </div>
-          <div class="card" style="grid-column:span 2;">
-            <div class="w-title" data-tip="Release notes and support details">Product Notes</div>
-            <div class="note">Use this space for version notes and support details.</div>
-          </div>
+          <div class="card"><div class="w-title" data-tip="First-time workflow">Quick Start</div><div class="note">Import, log, export.</div></div>
+          <div class="card"><div class="w-title" data-tip="Local-first storage and backup">Privacy</div><div class="note">Browser-only, no cloud database.</div></div>
+          <div class="card" style="grid-column:span 2;"><div class="w-title" data-tip="Release notes and support details">Product Notes</div><div class="note">Use this space for version notes and support details.</div></div>
         </div>
       </section>
     </main>
@@ -873,9 +788,7 @@
     document.getElementById('logBtn').addEventListener('click', () => alert('Next we will wire the log modal here.'));
     document.getElementById('exportBtn').addEventListener('click', () => alert('Next we will wire CSV export here.'));
     document.getElementById('goalBtn').addEventListener('click', () => alert('Next we will wire the goal modal here.'));
-    document.getElementById('applyCustomBtn').addEventListener('click', () => {
-      document.getElementById('rangeLabel').textContent = 'Custom range';
-    });
+    document.getElementById('applyCustomBtn').addEventListener('click', () => { document.getElementById('rangeLabel').textContent = 'Custom range'; });
 
     function renderCalendarShell() {
       const summary = document.getElementById('calendarSummary');
