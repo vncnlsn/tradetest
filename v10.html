@@ -5,25 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TrackYourTrades v10 Scaffold</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@600;700;800;900&display=swap');
+
     :root {
       --bg: #141518;
-      --bg2: #191b21;
+      --bg2: #181b21;
       --bg3: #1f222a;
       --bg4: #252936;
-      --panel: #1c1f26;
-      --panel2: #202430;
+      --panel: #1b1e25;
       --border: #2b3040;
-      --border2: #31384a;
+      --border2: #32394b;
       --text: #e7ebf5;
-      --muted: #7a8192;
+      --muted: #7d8496;
       --muted2: #5f6677;
       --profit: #1fd67a;
       --loss: #f0484a;
       --accent: #4f7cff;
       --gold: #f0b429;
       --shadow: 0 14px 36px rgba(0, 0, 0, 0.32);
-      --r: 14px;
-      --rs: 10px;
+      --r: 15px;
+      --rs: 11px;
       --gap: 14px;
     }
 
@@ -33,9 +34,12 @@
       margin: 0;
       background: var(--bg);
       color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 14px;
       overflow-x: hidden;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     button, input, select, textarea { font: inherit; }
@@ -66,12 +70,8 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text);
       white-space: nowrap;
+      line-height: 1;
     }
     .brand-mark {
       width: 28px;
@@ -79,8 +79,21 @@
       background: var(--profit);
       border-radius: 999px;
       box-shadow: 0 0 0 1px rgba(31, 214, 122, 0.08);
+      flex: 0 0 auto;
     }
-    .brand em { font-style: normal; color: var(--profit); }
+    .brand-text {
+      font-family: "Inter Tight", Inter, system-ui, sans-serif;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      display: inline-flex;
+      gap: 0;
+      align-items: center;
+    }
+    .brand-text .track,
+    .brand-text .trades { color: var(--text); }
+    .brand-text .your { color: var(--profit); }
 
     .nav {
       display: flex;
@@ -98,16 +111,13 @@
       transition: 0.14s ease;
       font-size: 12px;
       font-weight: 700;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
     }
-    .nav button:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.03);
-    }
+    .nav button:hover { color: var(--text); background: rgba(255,255,255,0.03); }
     .nav button.active {
       color: var(--text);
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255,255,255,0.04);
       border-color: var(--border);
       box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
     }
@@ -124,6 +134,7 @@
       color: var(--muted);
       font-size: 12px;
       white-space: nowrap;
+      font-family: Inter, system-ui, sans-serif;
     }
     .greeting em { color: var(--text); font-style: normal; }
 
@@ -174,6 +185,12 @@
       border-color: var(--border2);
       background: rgba(255,255,255,0.03);
     }
+    .btn.green {
+      background: rgba(31, 214, 122, 0.12);
+      border: 1px solid var(--profit);
+      color: var(--profit);
+    }
+    .btn.green:hover { background: rgba(31, 214, 122, 0.18); }
 
     .main { padding: 18px; flex: 1; }
     .page { display: none; }
@@ -189,7 +206,7 @@
     }
     .eyebrow {
       font-size: 10px;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.19em;
       color: var(--muted2);
       text-transform: uppercase;
       font-weight: 800;
@@ -200,6 +217,7 @@
       line-height: 1.15;
       font-weight: 900;
       letter-spacing: -0.03em;
+      font-family: "Inter Tight", Inter, system-ui, sans-serif;
     }
     .sub {
       margin-top: 5px;
@@ -296,6 +314,59 @@
     .widget.wide { grid-column: span 6; }
     .widget.full { grid-column: span 12; }
 
+    .section-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: #dfe4ef;
+      margin-bottom: 10px;
+      line-height: 1.2;
+      font-family: "Inter Tight", Inter, system-ui, sans-serif;
+    }
+    .info-dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 999px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid var(--border2);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 1;
+      cursor: help;
+      position: relative;
+      flex: 0 0 auto;
+      background: rgba(255,255,255,0.03);
+      font-family: Inter, system-ui, sans-serif;
+    }
+    .info-dot::after {
+      content: attr(data-tip);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: 260px;
+      white-space: normal;
+      background: #1e2230;
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 8px 10px;
+      color: #d7ddea;
+      font-size: 11px;
+      line-height: 1.5;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.14s ease;
+      z-index: 30;
+    }
+    .info-dot:hover::after { opacity: 1; }
+
     .placeholder {
       min-height: 180px;
       display: grid;
@@ -315,10 +386,7 @@
       border-radius: var(--r);
       background: var(--bg2);
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    table { width: 100%; border-collapse: collapse; }
     th, td {
       padding: 11px 12px;
       border-bottom: 1px solid #2a2f3d;
@@ -332,6 +400,7 @@
       color: var(--muted2);
       background: rgba(255,255,255,0.01);
       font-weight: 800;
+      font-family: Inter, system-ui, sans-serif;
     }
     tr:hover td { background: rgba(255,255,255,0.02); }
 
@@ -375,6 +444,69 @@
     .day .p { font-size: 12px; font-weight: 900; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
     .day .c { font-size: 10px; color: var(--muted); }
 
+    .rows-view { display: flex; flex-direction: column; gap: 0; }
+    .row-day {
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 88px 4px 1fr auto;
+      align-items: stretch;
+      min-height: 52px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .row-day:hover { background: var(--bg3); }
+    .row-day:last-child { border-bottom: none; }
+    .row-date-col {
+      padding: 12px 14px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .row-date-num {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .row-date-dow {
+      font-size: 9px;
+      color: var(--muted2);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .row-bar { width: 4px; flex-shrink: 0; }
+    .row-bar.g { background: var(--profit); }
+    .row-bar.r { background: var(--loss); }
+    .row-content {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+    }
+    .row-pnl-line { display: flex; align-items: center; gap: 10px; }
+    .row-pnl { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; font-weight: 800; }
+    .row-trade-count { font-size: 11px; color: var(--muted); }
+    .row-journal-preview {
+      font-size: 11px;
+      color: var(--muted);
+      font-style: italic;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 400px;
+    }
+    .row-meta-col {
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 3px;
+    }
+    .row-symbols { font-size: 10px; color: var(--muted2); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
     .side {
       position: sticky;
       top: 78px;
@@ -394,18 +526,11 @@
     .mini-item span { color: var(--muted); font-size: 12px; }
     .mini-item strong { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 
-    .section-card-title {
-      font-size: 16px;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      margin-bottom: 10px;
-    }
     .note { color: var(--muted); font-size: 12px; line-height: 1.6; }
     .dim { color: var(--muted2); }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
     .hide { display: none !important; }
 
-    /* Responsive */
     @media (max-width: 1100px) {
       .stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .two-col, .calendar-shell { grid-template-columns: 1fr; }
@@ -433,7 +558,10 @@
   <div class="app-shell">
     <header class="topbar">
       <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
-        <div class="brand"><span class="brand-mark"></span> TRACK<em>YOUR</em>TRADES</div>
+        <div class="brand" aria-label="TrackYourTrades">
+          <span class="brand-mark"></span>
+          <span class="brand-text"><span class="track">TRACK</span><span class="your">YOUR</span><span class="trades">TRADES</span></span>
+        </div>
         <nav class="nav" aria-label="Primary navigation">
           <button class="active" data-page="dashboard">Dashboard</button>
           <button data-page="calendar">Calendar</button>
@@ -451,7 +579,7 @@
           <strong id="accountValue">$4,000</strong>
         </div>
         <button class="btn alt" id="exportBtn">CSV</button>
-        <button class="btn" id="logBtn">+ Log</button>
+        <button class="btn green" id="logBtn">+ Log</button>
       </div>
     </header>
 
@@ -498,7 +626,7 @@
 
         <div class="grid stat-grid">
           <div class="stat">
-            <label>Total P&L <span>closed trades</span></label>
+            <label>Total P&L <span>closed</span></label>
             <div class="val" id="statPnl">—</div>
             <div class="meta" id="statPnlMeta">—</div>
           </div>
@@ -529,17 +657,14 @@
             <div class="section-head" style="margin-bottom:10px;">
               <div>
                 <div class="eyebrow">Goal mode</div>
-                <div class="section-card-title">Actual vs Goal vs Projected</div>
-                <div class="sub">This area will hold the goal curve, pacing, and the current trajectory view.</div>
+                <div class="section-card-title">Actual vs Goal vs Projected <span class="info-dot" data-tip="Goal pacing and trajectory will live here.">?</span></div>
+                <div class="sub">This area will hold the goal curve, pacing, and current trajectory view.</div>
               </div>
               <div class="toolbar">
                 <button class="btn alt" id="toggleGoalBtn">Show Goal</button>
               </div>
             </div>
-            <div class="placeholder" style="height:260px;">
-              Goal chart placeholder<br />
-              actual / goal / projected
-            </div>
+            <div class="placeholder" style="height:260px;">Goal chart placeholder<br />actual / goal / projected</div>
             <div id="goalStatus" style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;"></div>
           </div>
 
@@ -547,7 +672,7 @@
             <div class="section-head" style="margin-bottom:10px;">
               <div>
                 <div class="eyebrow">Smart insights</div>
-                <div class="section-card-title">Behavior summaries</div>
+                <div class="section-card-title">Behavior summaries <span class="info-dot" data-tip="Concise pattern recognition based on tags and performance. No advice.">?</span></div>
                 <div class="sub">Pattern recognition only. No advice, no noise.</div>
               </div>
             </div>
@@ -562,7 +687,7 @@
             <div class="section-head">
               <div>
                 <div class="eyebrow">Daily P&L</div>
-                <div class="section-card-title">Daily P&L</div>
+                <div class="section-card-title">Daily P&L <span class="info-dot" data-tip="Daily performance for the selected range.">?</span></div>
               </div>
             </div>
             <div class="placeholder">Daily chart placeholder</div>
@@ -572,7 +697,7 @@
             <div class="section-head">
               <div>
                 <div class="eyebrow">Ticker breakdown</div>
-                <div class="section-card-title">By Ticker</div>
+                <div class="section-card-title">By Ticker <span class="info-dot" data-tip="Summed performance by symbol for the current period.">?</span></div>
               </div>
             </div>
             <div class="placeholder">Ticker analytics placeholder</div>
@@ -582,7 +707,7 @@
             <div class="section-head">
               <div>
                 <div class="eyebrow">Calendar preview</div>
-                <div class="section-card-title">Quick day view</div>
+                <div class="section-card-title">Quick day view <span class="info-dot" data-tip="Fast scan of calendar performance without leaving the dashboard.">?</span></div>
               </div>
             </div>
             <div class="placeholder">Mini calendar placeholder</div>
@@ -592,7 +717,7 @@
             <div class="section-head">
               <div>
                 <div class="eyebrow">Recent activity</div>
-                <div class="section-card-title">Recent Trades</div>
+                <div class="section-card-title">Recent Trades <span class="info-dot" data-tip="The latest trades in the filtered period, with notes and key values.">?</span></div>
               </div>
             </div>
             <div class="table-wrap">
@@ -617,7 +742,7 @@
           <div>
             <div class="eyebrow">Calendar journal</div>
             <div class="title">Calendar</div>
-            <div class="sub">A cleaner, fuller calendar view with a dedicated day panel for trades and journal notes.</div>
+            <div class="sub">A cleaner calendar view with a dedicated day panel for trades and journal notes.</div>
           </div>
         </div>
 
@@ -739,15 +864,15 @@
 
         <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;">
           <div class="card">
-            <div class="section-card-title">Quick start</div>
+            <div class="section-card-title">Quick start <span class="info-dot" data-tip="A short guide for first-time users. Keep it very practical.">?</span></div>
             <div class="note">Explain the import flow, manual logging, export backup, and how the local-first storage works.</div>
           </div>
           <div class="card">
-            <div class="section-card-title">Privacy</div>
+            <div class="section-card-title">Privacy <span class="info-dot" data-tip="State clearly that data stays on-device unless the user exports it.">?</span></div>
             <div class="note">Put the no-cloud, browser-only promise here in a clear and reassuring way.</div>
           </div>
           <div class="card" style="grid-column:span 2;">
-            <div class="section-card-title">Product notes</div>
+            <div class="section-card-title">Product notes <span class="info-dot" data-tip="Release notes, known limitations, and support details go here.">?</span></div>
             <div class="note">Use this for release notes, known limitations, and support contact details.</div>
           </div>
         </div>
@@ -755,20 +880,17 @@
     </main>
   </div>
 
-  <!-- PLACEHOLDER MODALS -->
   <div id="logModal" class="hide"></div>
   <div id="goalModal" class="hide"></div>
 
   <script>
-    // Scaffold behavior only.
-    // This keeps the page feeling like a real app while we rebuild the actual logic section by section.
-
     const state = {
       activePage: 'dashboard',
       period: '1M',
       showGoal: false,
       currentYear: new Date().getFullYear(),
-      currentMonth: new Date().getMonth()
+      currentMonth: new Date().getMonth(),
+      calView: 'month'
     };
 
     function setPage(page) {
@@ -813,25 +935,61 @@
       document.getElementById('rangeLabel').textContent = 'Custom range';
     });
 
-    // Calendar and trade page controls are placeholders for now.
+    function renderCalendarShell() {
+      const summary = document.getElementById('calendarSummary');
+      const content = document.getElementById('calendarContent');
+      const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      if (state.calView === 'rows') {
+        summary.textContent = 'Sessions view placeholder';
+        content.innerHTML = `
+          <div class="rows-view">
+            <div class="row-day">
+              <div class="row-date-col"><div class="row-date-num">01</div><div class="row-date-dow">Mon</div></div>
+              <div class="row-bar g"></div>
+              <div class="row-content"><div class="row-pnl-line"><span class="row-pnl">+$420.00</span><span class="row-trade-count">3 trades</span></div><div class="row-journal-preview">Strong morning session. Kept size under control.</div></div>
+              <div class="row-meta-col"><div class="row-symbols">NVDA · AAPL</div></div>
+            </div>
+            <div class="row-day">
+              <div class="row-date-col"><div class="row-date-num">02</div><div class="row-date-dow">Tue</div></div>
+              <div class="row-bar r"></div>
+              <div class="row-content"><div class="row-pnl-line"><span class="row-pnl">-$180.00</span><span class="row-trade-count">2 trades</span></div><div class="row-journal-preview">Chased the open and gave it back.</div></div>
+              <div class="row-meta-col"><div class="row-symbols">TSLA</div></div>
+            </div>
+          </div>`;
+        return;
+      }
+
+      summary.textContent = 'Month view placeholder';
+      content.innerHTML = `
+        <div class="month-grid">
+          ${days.map(d => `<div class="dow">${d}</div>`).join('')}
+          ${Array.from({length: 4}).map(() => `<div class="day empty"></div>`).join('')}
+          <div class="day green"><div class="n">1</div><div><div class="p">+$420.00</div><div class="c">3 trades</div></div></div>
+          <div class="day red"><div class="n">2</div><div><div class="p">-$180.00</div><div class="c">2 trades</div></div></div>
+          <div class="day"><div class="n">3</div><div><div class="c">No trades</div></div></div>
+          <div class="day green"><div class="n">4</div><div><div class="p">+$95.00</div><div class="c">1 trade</div></div></div>
+        </div>`;
+    }
+
     document.getElementById('prevMonthBtn').addEventListener('click', () => alert('Next we will wire month navigation.'));
     document.getElementById('nextMonthBtn').addEventListener('click', () => alert('Next we will wire month navigation.'));
     document.querySelectorAll('[data-calview]').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('[data-calview]').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        state.calView = btn.dataset.calview;
+        renderCalendarShell();
       });
     });
     document.getElementById('closeDayBtn').addEventListener('click', () => alert('Next we will wire close day panel behavior.'));
     document.getElementById('saveJournalBtn').addEventListener('click', () => alert('Next we will wire journaling.'));
 
-    // Trade table stubs
     document.getElementById('importBtn').addEventListener('click', () => alert('Next we will wire import.'));
     document.getElementById('clearFiltersBtn').addEventListener('click', () => {
       ['tradeSearch','tradeTicker','tradeTag','tradePnlFilter'].forEach(id => document.getElementById(id).value = '');
     });
 
-    // Start on dashboard
+    renderCalendarShell();
     setPage('dashboard');
   </script>
 </body>
