@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrackYourTrades v10</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@700;800;900&display=swap');
+
+    :root{
+      --bg:#121317;
+      --bg2:#171a20;
+      --bg3:#1d2129;
+      --bg4:#232936;
+      --border:#2a3040;
+      --border2:#343c50;
+      --text:#ecf0f7;
+      --muted:#8a92a6;
+      --muted2:#677082;
+      --profit:#22d67a;
+      --loss:#f04b50;
+      --accent:#5d82ff;
+      --shadow:0 18px 46px rgba(0,0,0,.36);
+      --r:14px;
+      --gap:14px;
+      --topbar-h:60px;
+      --flip-ms:520ms;
+      --flip-delay:160ms;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:radial-gradient(1200px 600px at 10% 0%, rgba(93,130,255,.06), transparent 55%), var(--bg);
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font-size:14px;
+      overflow:hidden;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      text-rendering:optimizeLegibility;
+    }
+
+    button,input,select,textarea{font:inherit}
+    ::selection{background:rgba(93,130,255,.25)}
+    ::-webkit-scrollbar{width:8px;height:8px}
+    ::-webkit-scrollbar-thumb{background:var(--border);border-radius:999px}
+    ::-webkit-scrollbar-track{background:transparent}
+
+    .app-shell{min-height:100vh;display:flex;flex-direction:column}
+
+    .topbar{
+      position:sticky;top:0;z-index:30;
+      min-height:var(--topbar-h);
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+      padding:0 18px;
+      background:rgba(18,19,23,.95);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--border);
+    }
+
+    .brand{display:flex;align-items:center;gap:10px;white-space:nowrap;line-height:1}
+    .brand-mark{width:30px;height:2px;background:var(--profit);border-radius:999px;flex:0 0 auto;box-shadow:0 0 0 1px rgba(34,214,122,.1)}
+    .brand-text{
+      font-family:"Inter Tight",Inter,system-ui,sans-serif;
+      font-size:12px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;
+      display:inline-flex;align-items:center;gap:0;
+    }
+    .brand-text .track,.brand-text .trades{color:#fff}
+    .brand-text .your{color:var(--profit)}
+
+    .nav{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+    .nav button{
+      border:1px solid transparent;background:transparent;color:var(--muted);
+      border-radius:10px;padding:7px 12px;cursor:pointer;transition:.14s ease;
+      font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    }
+    .nav button:hover{color:var(--text);background:rgba(255,255,255,.03)}
+    .nav button.active{color:var(--text);background:rgba(255,255,255,.04);border-color:var(--border);box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
+
+    .top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .greeting{color:var(--muted);font-size:12px;white-space:nowrap}
+    .greeting em{color:var(--text);font-style:normal}
+
+    .pill{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:7px 12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.02)}
+    .pill select{background:transparent;border:none;color:var(--muted);outline:none;cursor:pointer;min-width:92px}
+    .pill strong{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;font-weight:800;letter-spacing:.01em}
+
+    .btn{border:none;background:var(--accent);color:#fff;border-radius:12px;padding:9px 14px;font-weight:800;cursor:pointer;transition:.14s ease;letter-spacing:.02em}
+    .btn:hover{filter:brightness(1.08)}
+    .btn.alt{background:transparent;border:1px solid var(--border);color:var(--muted)}
+    .btn.alt:hover{color:var(--text);border-color:var(--border2);background:rgba(255,255,255,.03)}
+    .btn.green{background:rgba(34,214,122,.12);border:1px solid var(--profit);color:var(--profit)}
+    .btn.green:hover{background:rgba(34,214,122,.18)}
+    .swap-btn{width:40px;height:40px;display:inline-grid;place-items:center;padding:0}
+    .swap-btn svg{width:18px;height:18px;display:block;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    .small-btn{width:28px;height:28px;padding:0;border-radius:999px;display:inline-grid;place-items:center;font-size:12px;line-height:1}
+
+    .main{padding:18px;flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+    .page{display:none;min-height:calc(100vh - var(--topbar-h) - 36px);overflow:hidden}
+    .page.active{display:flex;flex-direction:column;min-height:0;flex:1}
+    #dashboardPage,#calendarPage,#tradesPage,#helpPage{flex:1;min-height:0;overflow:hidden}
+
+    .title{margin:0;font-family:"Inter Tight",Inter,system-ui,sans-serif;font-size:20px;font-weight:900;letter-spacing:-.02em;line-height:1.15}
+    .eyebrow{font-size:10px;letter-spacing:.19em;color:var(--muted2);text-transform:uppercase;font-weight:800}
+    .sub{margin-top:5px;color:var(--muted);font-size:12px;line-height:1.6;max-width:80ch}
+    .section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+    .page-headline{display:flex;align-items:center;gap:10px;min-width:0}
+    .headline-copy{min-width:0}
+    .toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .seg{display:flex;gap:4px;padding:4px;background:var(--bg3);border:1px solid var(--border);border-radius:14px}
+    .seg button{border:none;background:transparent;color:var(--muted);padding:8px 10px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:800;letter-spacing:.02em;transition:.14s ease}
+    .seg button:hover{color:var(--text)}
+    .seg button.active{background:var(--bg4);color:var(--text);box-shadow:inset 0 1px 0 rgba(255,255,255,.02)}
+
+    .card{background:linear-gradient(180deg,var(--bg2),#181b21);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:16px}
+    .grid{display:grid;gap:var(--gap)}
+    .stats{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:var(--gap)}
+    .two{grid-template-columns:1.5fr 1fr}
+    .widgets{grid-template-columns:repeat(12,minmax(0,1fr));margin-top:var(--gap)}
+
+    .stat{min-height:114px;background:linear-gradient(180deg,var(--bg2),#1d2027);border:1px solid var(--border);border-radius:var(--r);padding:16px}
+    .stat .label{display:flex;justify-content:space-between;gap:8px;font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted2);margin-bottom:10px;font-weight:800;font-family:Inter,system-ui,sans-serif}
+    .stat .val{font-size:22px;line-height:1;font-weight:900;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:-.04em}
+    .stat .meta{margin-top:8px;color:var(--muted);font-size:12px;line-height:1.5}
+
+    .widget{grid-column:span 6;min-height:220px;position:relative}
+    .widget.wide{grid-column:span 6}
+    .widget.full{grid-column:span 12}
+
+    .w-title{display:inline-flex;align-items:center;gap:6px;font-family:"Inter Tight",Inter,system-ui,sans-serif;font-size:13px;font-weight:800;letter-spacing:.01em;line-height:1;color:#cfd5e2;margin-bottom:12px;position:relative;cursor:help;user-select:none}
+    .w-title:hover::after{content:attr(data-tip);position:absolute;left:0;top:calc(100% + 8px);background:#1e2230;border:1px solid var(--border2);border-radius:8px;padding:6px 8px;color:#d7ddea;font-size:11px;line-height:1.45;white-space:nowrap;box-shadow:var(--shadow);z-index:50;pointer-events:none;max-width:320px;overflow:hidden;text-overflow:ellipsis}
+
+    .placeholder{min-height:180px;display:grid;place-items:center;color:var(--muted);border:1px dashed #394154;border-radius:14px;background:rgba(255,255,255,.02);text-align:center;padding:20px;line-height:1.6}
+    .note{color:var(--muted);font-size:12px;line-height:1.6}
+    .dim{color:var(--muted2)}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .hide{display:none !important}
+
+    /* ===== Flip feel ===== */
+    .flip-shell{position:relative;width:100%;overflow:hidden;perspective:1200px;align-self:stretch}
+    .flip-inner{position:relative;width:100%;min-height:0;display:grid;grid-template-areas:'stack'}
+    .flip-face{grid-area:stack;display:flex;flex-direction:column;min-height:0;opacity:0;transform:translateY(14px) scale(.992);filter:blur(0px);pointer-events:none;transition:opacity var(--flip-ms) cubic-bezier(.22,.85,.18,1), transform var(--flip-ms) cubic-bezier(.22,.85,.18,1), filter var(--flip-ms) cubic-bezier(.22,.85,.18,1);will-change:opacity,transform,filter}
+    .flip-face.flip-front{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+    .flip-shell.flipped .flip-front{opacity:0;transform:translateY(-10px) scale(.986);filter:blur(12px);pointer-events:none}
+    .flip-shell.flipped .flip-back{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+    .flip-shell.transitioning .flip-face{filter:blur(10px) saturate(.96)}
+    .flip-shell.transitioning .flip-front{opacity:.35;transform:translateY(-6px) scale(.985)}
+    .flip-shell.transitioning.flipped .flip-back{opacity:.35;transform:translateY(6px) scale(.985)}
+
+    .hero-chart,.small-chart{display:grid;place-items:center;border-radius:14px;border:1px dashed #394154;color:var(--muted);background:rgba(255,255,255,.02)}
+    .hero-chart{min-height:280px}
+    .small-chart{min-height:180px}
+
+    .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:var(--r);background:var(--bg2)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:11px 12px;border-bottom:1px solid #2a2f3d;text-align:left;white-space:nowrap}
+    th{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted2);background:rgba(255,255,255,.01);font-weight:800;font-family:Inter,system-ui,sans-serif}
+    tr:hover td{background:rgba(255,255,255,.02)}
+
+    /* ===== Calendar / Journal ===== */
+    #calendarPage{gap:14px;min-height:0}
+    .calendar-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;position:relative}
+    .jump-wrap{position:relative}
+    .jump-popover{position:absolute;left:0;top:calc(100% + 8px);z-index:60;min-width:260px;display:none;background:#1b1f28;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:12px}
+    .jump-popover.open{display:block}
+    .jump-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+    .jump-popover select,.jump-popover input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:8px 10px;outline:none}
+    .jump-actions{display:flex;justify-content:flex-end;gap:8px}
+
+    .calendar-shell{position:relative;display:grid;grid-template-columns:minmax(0,1fr);gap:var(--gap);flex:1;min-height:0;align-items:stretch}
+    .calendar-main{display:flex;flex-direction:column;min-height:0;min-width:0;overflow:hidden}
+    .calendar-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+    .month-title{font-family:"Inter Tight",Inter,system-ui,sans-serif;font-size:16px;font-weight:900;letter-spacing:-.02em;line-height:1.15}
+    .month-sub{font-size:10px;color:var(--muted2);letter-spacing:.18em;text-transform:uppercase;font-weight:800;margin-top:4px}
+    .month-grid-head,.month-grid{display:grid;grid-template-columns:56px repeat(7,minmax(0,1fr)) 86px;gap:6px;align-items:stretch;min-width:100%}
+    .month-grid-head{padding:0 2px 8px;margin-bottom:2px;align-items:center;position:sticky;top:0;z-index:2;background:linear-gradient(180deg,var(--bg2),rgba(24,27,33,.98));backdrop-filter:blur(8px)}
+    .dow{font-size:10px;letter-spacing:.18em;color:var(--muted2);text-transform:uppercase;text-align:center;font-weight:800}
+    .week-label,.week-pnl-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);font-weight:800;align-self:center}
+    .week-pnl-label{text-align:right}
+    .month-weeks{display:flex;flex-direction:column;gap:6px;min-height:0;flex:1;overflow:auto;padding-right:4px;scroll-behavior:smooth}
+    .week-row{display:grid;grid-template-columns:56px repeat(7,minmax(0,1fr)) 86px;gap:6px;align-items:stretch;flex:1;min-height:0}
+    .week-cell{min-height:0;border:1px solid var(--border);background:rgba(255,255,255,.02);border-radius:12px;padding:8px 8px 10px;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;transition:.12s ease;min-width:0;position:relative}
+    .week-cell:hover{border-color:#4c546a;background:rgba(255,255,255,.035)}
+    .week-cell.empty{background:transparent;border:1px solid transparent;cursor:default}
+    .week-cell.today{outline:1px solid var(--accent);outline-offset:0}
+    .week-cell.selected{outline:1px solid var(--accent);background:rgba(93,130,255,.08)}
+    .week-cell .n{font-size:12px;color:#8b91a4;font-weight:800;letter-spacing:.01em}
+    .week-cell .c{font-size:10px;color:var(--muted);opacity:.8}
+    .week-bar{border-radius:12px;min-height:0;display:flex;align-items:flex-end;justify-content:flex-end;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;font-weight:800;color:var(--profit);padding-right:2px;padding-bottom:8px;background:rgba(255,255,255,.015);border:1px solid var(--border)}
+
+    .journal-spine{display:grid;gap:10px;flex:1;min-height:0;overflow:auto;padding-right:4px;scroll-behavior:smooth}
+    .month-section{border:1px solid var(--border);border-radius:14px;background:var(--bg2);overflow:hidden}
+    .month-section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.01);position:sticky;top:0;z-index:2;backdrop-filter:blur(8px)}
+    .month-section-title{font-family:"Inter Tight",Inter,system-ui,sans-serif;font-size:14px;font-weight:900;letter-spacing:-.02em}
+    .month-section-meta{font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:.16em;font-weight:800}
+    .day-row{display:grid;grid-template-columns:72px 4px 1fr auto;gap:0;align-items:stretch;min-height:54px;border-bottom:1px solid var(--border)}
+    .day-row:last-child{border-bottom:none}
+    .day-row:hover{background:var(--bg3)}
+    .day-row.selected{outline:1px solid var(--accent);outline-offset:-1px}
+    .day-date-col{padding:12px 10px;border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:center;gap:2px}
+    .day-date-num{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;font-weight:800}
+    .day-date-dow{font-size:9px;color:var(--muted2);letter-spacing:.5px;text-transform:uppercase}
+    .day-bar{width:4px;background:transparent}
+    .day-content{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+    .day-left{display:flex;flex-direction:column;gap:4px;min-width:0}
+    .day-status{font-size:12px;color:var(--muted)}
+    .day-note{font-size:11px;color:var(--muted2);font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+    .day-right{padding:12px 16px;display:flex;align-items:center;justify-content:flex-end;min-width:82px;color:var(--muted2);font-size:10px;text-transform:uppercase;letter-spacing:.16em;font-weight:800}
+
+    .side{display:flex;flex-direction:column;min-height:0;overflow:hidden;position:absolute;top:0;right:0;width:min(360px,100%);height:100%;transform:translateX(calc(100% + 18px));opacity:0;pointer-events:none;transition:transform .28s ease, opacity .2s ease;z-index:20}
+    .side.open{transform:translateX(0);opacity:1;pointer-events:auto}
+    .side-inner{display:flex;flex-direction:column;min-height:0;flex:1}
+    .mini-list{display:grid;gap:8px}
+    .mini-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid var(--border)}
+    .mini-item span{color:var(--muted);font-size:12px}
+    .mini-item strong{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;text-align:right}
+    .calendar-side-body{display:flex;flex-direction:column;gap:14px;min-height:0;flex:1;overflow:auto;padding-right:4px}
+    .journal-box{display:flex;flex-direction:column;gap:8px;min-height:0}
+    .journal-box textarea{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:14px;padding:12px;resize:vertical;min-height:150px;outline:none}
+    .panel-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+    .panel-title-row .w-title{margin-bottom:0}
+    .calendar-mode-shell{display:flex;flex-direction:column;gap:14px;min-height:0;flex:1}
+    .today-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);color:var(--muted);background:rgba(255,255,255,.02);font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+
+    @media(max-width:1180px){
+      .stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .two{grid-template-columns:1fr}
+      .widgets{grid-template-columns:repeat(6,minmax(0,1fr))}
+      .widget,.widget.wide{grid-column:span 3}
+      .side{width:min(340px,100%)}
+    }
+    @media(max-width:820px){
+      .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .widgets{grid-template-columns:1fr}
+      .widget,.widget.wide,.widget.full{grid-column:span 12}
+      .topbar{min-height:auto;padding:12px 14px;align-items:flex-start;flex-direction:column}
+      .top-right{justify-content:flex-start}
+      .main{padding:12px}
+      .month-grid-head,.month-grid,.week-row{grid-template-columns:44px repeat(7,minmax(0,1fr)) 58px}
+      .day-row{grid-template-columns:58px 4px 1fr auto}
+      .side{width:min(320px,100%)}
+    }
+    @media(max-width:540px){
+      .stats{grid-template-columns:1fr}
+      .seg button,.nav button,.btn{padding:9px 11px}
+      .side{width:100%}
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        <div class="brand" aria-label="TrackYourTrades">
+          <span class="brand-mark"></span>
+          <span class="brand-text"><span class="track">TRACK</span><span class="your">YOUR</span><span class="trades">TRADES</span></span>
+        </div>
+        <nav class="nav" aria-label="Primary navigation">
+          <button class="active" data-page="dashboard">Dashboard</button>
+          <button data-page="calendar">Calendar</button>
+          <button data-page="trades">Trades</button>
+          <button data-page="help">Help</button>
+        </nav>
+      </div>
+      <div class="top-right">
+        <div class="greeting" id="greeting">Hey, <em>Vance</em></div>
+        <div class="pill">
+          <select id="accountSelect"><option>Main</option></select>
+          <strong id="accountValue">—</strong>
+        </div>
+        <button class="btn alt" id="exportBtn">CSV</button>
+        <button class="btn green" id="logBtn">+ Log</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section id="dashboardPage" class="page active">
+        <div class="section-head">
+          <div class="page-headline">
+            <button class="btn alt swap-btn" id="dashSwapBtn" aria-label="Flip dashboard">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 7h12a6 6 0 0 1 6 6" />
+                <path d="M21 7l-3-3" />
+                <path d="M21 7l-3 3" />
+                <path d="M21 17H9a6 6 0 0 1-6-6" />
+                <path d="M3 17l3-3" />
+                <path d="M3 17l3 3" />
+              </svg>
+            </button>
+            <div class="headline-copy">
+              <div class="eyebrow" id="dashboardEyebrow">Performance dashboard</div>
+              <div class="title" id="dashboardTitle">Dashboard</div>
+              <div class="sub" id="rangeLabel">Import trades to populate metrics.</div>
+            </div>
+          </div>
+          <div class="toolbar">
+            <button class="btn alt" id="customizeBtn">Customize</button>
+            <div class="seg" id="periodSeg" aria-label="Date range">
+              <button data-range="1D">1D</button><button data-range="1W">1W</button><button data-range="1M" class="active">1M</button><button data-range="3M">3M</button><button data-range="YTD">YTD</button><button data-range="1Y">1Y</button><button data-range="ALL">ALL</button><button data-range="CUSTOM">Custom</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card hide" id="customRangeCard" style="margin-bottom:14px;">
+          <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
+            <div><label class="note">Start date</label><input type="date" id="customStart" style="width:100%;margin-top:6px;" /></div>
+            <div><label class="note">End date</label><input type="date" id="customEnd" style="width:100%;margin-top:6px;" /></div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:12px;"><button class="btn" id="applyCustomBtn">Apply custom range</button></div>
+        </div>
+
+        <div class="grid stats">
+          <div class="card stat"><div class="label">Total P&amp;L</div><div class="val" id="statPnl">—</div><div class="meta" id="statPnlMeta">Import trades to calculate.</div></div>
+          <div class="card stat"><div class="label">Return</div><div class="val" id="statRet">—</div><div class="meta" id="statRetMeta">Starting balance not yet set.</div></div>
+          <div class="card stat"><div class="label">Win Rate</div><div class="val" id="statWr">—</div><div class="meta" id="statWrMeta">No closed trades loaded.</div></div>
+          <div class="card stat"><div class="label">Avg Win / Loss</div><div class="val" id="statRr">—</div><div class="meta" id="statRrMeta">Awaiting trade history.</div></div>
+          <div class="card stat"><div class="label">Profit Factor</div><div class="val" id="statPf">—</div><div class="meta" id="statPfMeta">Awaiting trade history.</div></div>
+        </div>
+
+        <div class="flip-shell dashboard-flip" id="dashboardFlip" style="margin-top:14px;flex:1;min-height:0;">
+          <div class="flip-inner">
+            <div class="flip-face flip-front">
+              <div class="grid two" style="height:100%;min-height:0;">
+                <div class="card" style="min-height:100%;display:flex;flex-direction:column;"><div class="section-head" style="margin-bottom:12px;"><div><div class="w-title" data-tip="Cumulative P&amp;L over the selected range">Equity Curve</div></div></div><div class="hero-chart" style="flex:1;min-height:280px;">awaiting imported trade data</div></div>
+                <div class="card" style="min-height:100%;display:flex;flex-direction:column;"><div class="section-head" style="margin-bottom:12px;"><div><div class="w-title" data-tip="Current performance summaries and trade behavior">Trade Summary</div></div></div><div class="mini-list" style="flex:1;"><div class="mini-item"><span>Best day</span><strong>—</strong></div><div class="mini-item"><span>Worst day</span><strong>—</strong></div><div class="mini-item"><span>Best setup</span><strong>—</strong></div><div class="mini-item"><span>Worst setup</span><strong>—</strong></div><div class="mini-item"><span>Green days</span><strong>—</strong></div><div class="mini-item"><span>Red days</span><strong>—</strong></div></div></div>
+              </div>
+              <div class="grid widgets" style="margin-top:14px;flex:1;min-height:0;">
+                <div class="card widget"><div class="w-title" data-tip="P&amp;L grouped by day">Daily P&amp;L</div><div class="small-chart">awaiting data</div></div>
+                <div class="card widget"><div class="w-title" data-tip="P&amp;L grouped by ticker">By Ticker</div><div class="small-chart">awaiting data</div></div>
+                <div class="card widget"><div class="w-title" data-tip="P&amp;L grouped by setup tag">By Setup</div><div class="small-chart">awaiting data</div></div>
+                <div class="card widget"><div class="w-title" data-tip="Performance by weekday">Time Performance</div><div class="small-chart">awaiting data</div></div>
+                <div class="card widget"><div class="w-title" data-tip="Winning and losing streaks">Streaks</div><div class="small-chart">awaiting data</div></div>
+                <div class="card widget"><div class="w-title" data-tip="Tagged behavior impact">Behavior Analysis</div><div class="small-chart">awaiting data</div></div>
+                <div class="card widget full"><div class="w-title" data-tip="Most recent trades">Recent Trades</div><div class="placeholder">awaiting imported trades</div></div>
+              </div>
+            </div>
+            <div class="flip-face flip-back">
+              <div class="grid two" style="height:100%;min-height:0;">
+                <div class="card" style="min-height:100%;display:flex;flex-direction:column;"><div class="section-head" style="margin-bottom:12px;"><div><div class="w-title" data-tip="Goal pacing and trajectory tracking">Goal Trajectory</div></div></div><div class="hero-chart" style="flex:1;min-height:280px;">awaiting goal settings</div><div class="mini-list" style="margin-top:12px;"><div class="mini-item"><span>Goal target</span><strong>—</strong></div><div class="mini-item"><span>Current pace</span><strong>—</strong></div><div class="mini-item"><span>Time left</span><strong>—</strong></div><div class="mini-item"><span>Status</span><strong>—</strong></div></div></div>
+                <div class="card" style="min-height:100%;display:flex;flex-direction:column;"><div class="section-head" style="margin-bottom:12px;"><div><div class="w-title" data-tip="Mathematical trading patterns and edge breakdowns">Curated Insights</div></div></div><div id="insightsList" class="mini-list" style="flex:1;overflow:auto;padding-right:4px;"><div class="placeholder">awaiting imported trades</div></div></div>
+              </div>
+              <div class="grid widgets" style="margin-top:14px;flex:1;min-height:0;">
+                <div class="card widget"><div class="w-title" data-tip="Goal-period equity by day">Goal Daily P&amp;L</div><div class="small-chart">awaiting goal data</div></div>
+                <div class="card widget"><div class="w-title" data-tip="Behavior by selected goal period">Goal By Setup</div><div class="small-chart">awaiting goal data</div></div>
+                <div class="card widget"><div class="w-title" data-tip="Pace against goal target">Pace Check</div><div class="small-chart">awaiting goal data</div></div>
+                <div class="card widget"><div class="w-title" data-tip="Projected path to goal">Projection</div><div class="small-chart">awaiting goal data</div></div>
+                <div class="card widget"><div class="w-title" data-tip="Goal streaks and drawdown context">Goal Streaks</div><div class="small-chart">awaiting goal data</div></div>
+                <div class="card widget"><div class="w-title" data-tip="Goal-specific behavior clusters">Goal Behavior</div><div class="small-chart">awaiting goal data</div></div>
+                <div class="card widget full"><div class="w-title" data-tip="Recent goal-period trades">Goal Trades</div><div class="placeholder">awaiting goal trades</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="calendarPage" class="page">
+        <div class="section-head">
+          <div class="page-headline">
+            <button class="btn alt swap-btn" id="calendarSwapBtn" aria-label="Flip calendar">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 7h12a6 6 0 0 1 6 6" /><path d="M21 7l-3-3" /><path d="M21 7l-3 3" /><path d="M21 17H9a6 6 0 0 1-6-6" /><path d="M3 17l3-3" /><path d="M3 17l3 3" />
+              </svg>
+            </button>
+            <div class="headline-copy">
+              <div class="eyebrow" id="calendarEyebrow">Calendar journal</div>
+              <div class="title" id="calendarTitle">Calendar</div>
+              <div class="sub" id="calendarSub">Month and sessions views with a day panel for trades and notes.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip-shell calendar-flip" id="calendarFlip" style="flex:1;min-height:0;">
+          <div class="flip-inner">
+            <div class="flip-face flip-front">
+              <div class="calendar-mode-shell">
+                <div class="calendar-toolbar">
+                  <div class="jump-wrap">
+                    <button class="btn alt" id="monthJumpBtn">April 2026</button>
+                    <div class="jump-popover" id="monthJumpPopover">
+                      <div class="jump-row"><select id="jumpMonth"></select><select id="jumpYear"></select></div>
+                      <div class="jump-actions"><button class="btn alt small-btn" id="jumpTodayBtn">Today</button><button class="btn" id="jumpGoBtn">Go</button></div>
+                    </div>
+                  </div>
+                  <button class="btn alt" id="calendarTodayBtn" aria-label="Go to present">Today</button>
+                  <span class="today-chip" id="monthSummary" style="margin-left:auto;">Monthly P&amp;L: —</span>
+                </div>
+                <div class="calendar-shell">
+                  <div class="card calendar-main">
+                    <div class="calendar-head"><div><div class="month-title" id="monthNameTitle">April 2026</div><div class="month-sub">Month view</div></div></div>
+                    <div style="overflow:hidden;flex:1;min-height:0;display:flex;flex-direction:column;">
+                      <div class="month-grid-head"><div class="week-label">Week</div><div class="dow">Sun</div><div class="dow">Mon</div><div class="dow">Tue</div><div class="dow">Wed</div><div class="dow">Thu</div><div class="dow">Fri</div><div class="dow">Sat</div><div class="week-pnl-label">P&amp;L</div></div>
+                      <div id="monthWeeks" class="month-weeks"></div>
+                    </div>
+                  </div>
+                  <aside class="card side" id="dayPanelMonth">
+                    <div class="side-inner">
+                      <div class="panel-title-row"><div><div class="w-title" data-tip="Selected day summary">Day View</div><div class="note" id="dayPanelMonthTitle">Select a day</div></div><button class="btn alt" id="closeDayBtnMonth">×</button></div>
+                      <div class="calendar-side-body">
+                        <div id="dayTradesMonth" class="mini-list"><div class="placeholder">Select a day</div></div>
+                        <div class="journal-box"><label class="note">Session journal</label><textarea id="dayJournalMonth" rows="8" placeholder="How did the session go? What did you learn?"></textarea><div style="display:flex;justify-content:flex-end;"><button class="btn" id="saveJournalMonthBtn">Save entry</button></div></div>
+                      </div>
+                    </div>
+                  </aside>
+                </div>
+              </div>
+            </div>
+            <div class="flip-face flip-back">
+              <div class="calendar-mode-shell">
+                <div class="calendar-toolbar">
+                  <div class="jump-wrap">
+                    <button class="btn alt" id="journalJumpBtn">April 2026</button>
+                    <div class="jump-popover" id="journalJumpPopover">
+                      <div class="jump-row"><select id="journalJumpMonth"></select><select id="journalJumpYear"></select></div>
+                      <div class="jump-actions"><button class="btn alt small-btn" id="journalJumpTodayBtn">Today</button><button class="btn" id="journalJumpGoBtn">Go</button></div>
+                    </div>
+                  </div>
+                  <button class="btn alt" id="journalTodayBtn" aria-label="Go to present">Today</button>
+                  <span class="today-chip" id="sessionSummary" style="margin-left:auto;">Monthly P&amp;L: —</span>
+                </div>
+                <div class="calendar-shell">
+                  <div class="card calendar-main">
+                    <div class="calendar-head"><div><div class="month-title" id="sessionMonthNameTitle">April 2026</div><div class="month-sub">Sessions view</div></div></div>
+                    <div id="journalSpine" class="journal-spine"></div>
+                  </div>
+                  <aside class="card side" id="dayPanelSessions">
+                    <div class="side-inner">
+                      <div class="panel-title-row"><div><div class="w-title" data-tip="Selected session summary">Day View</div><div class="note" id="dayPanelSessionsTitle">Select a session</div></div><button class="btn alt" id="closeDayBtnSessions">×</button></div>
+                      <div class="calendar-side-body">
+                        <div id="dayTradesSessions" class="mini-list"><div class="placeholder">Select a session</div></div>
+                        <div class="journal-box"><label class="note">Session journal</label><textarea id="dayJournalSessions" rows="8" placeholder="How did the session go? What did you learn?"></textarea><div style="display:flex;justify-content:flex-end;"><button class="btn" id="saveJournalSessionsBtn">Save entry</button></div></div>
+                      </div>
+                    </div>
+                  </aside>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tradesPage" class="page">
+        <div class="section-head">
+          <div><div class="eyebrow">All trades</div><div class="title">Trades</div><div class="sub">Sortable, filterable, editable, and built for fast review.</div></div>
+          <div class="toolbar"><button class="btn alt" id="importBtn">Import CSV / PDF</button><button class="btn alt" id="clearFiltersBtn">Clear filters</button></div>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="grid" style="grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;">
+            <div><label class="note">Search</label><input id="tradeSearch" placeholder="ticker, notes, tag…" style="width:100%;margin-top:6px;" /></div>
+            <div><label class="note">Ticker</label><input id="tradeTicker" placeholder="AAPL" style="width:100%;margin-top:6px;" /></div>
+            <div><label class="note">Tag</label><input id="tradeTag" placeholder="breakout" style="width:100%;margin-top:6px;" /></div>
+            <div><label class="note">P&amp;L filter</label><input id="tradePnlFilter" placeholder=">100 or <-50" style="width:100%;margin-top:6px;" /></div>
+          </div>
+        </div>
+        <div class="card" style="flex:1;min-height:0;"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Ticker</th><th>Type</th><th>Tags</th><th>P&amp;L</th><th>% G/L</th><th>Entry</th><th>Exit</th><th>Qty</th><th>Account</th><th>Notes</th></tr></thead><tbody id="tradeBody"><tr><td colspan="11" style="padding:18px;color:var(--muted);text-align:center;">awaiting imported trades</td></tr></tbody></table></div></div>
+      </section>
+
+      <section id="helpPage" class="page">
+        <div class="section-head"><div><div class="eyebrow">Help / notes</div><div class="title">Help</div><div class="sub">Short onboarding, privacy, and support notes.</div></div></div>
+        <div class="help-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap);">
+          <div class="card"><div class="w-title" data-tip="First-time workflow">Quick Start</div><div class="note">Import, log, export.</div></div>
+          <div class="card"><div class="w-title" data-tip="Local-first storage and backup">Privacy</div><div class="note">Browser-only, no cloud database.</div></div>
+          <div class="card" style="grid-column:span 2;"><div class="w-title" data-tip="Release notes and support details">Product Notes</div><div class="note">Use this space for version notes and support details.</div></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="logModal" class="hide"></div>
+  <div id="goalModal" class="hide"></div>
+
+  <script>
+    const state = {
+      activePage: 'dashboard',
+      period: '1M',
+      currentYear: new Date().getFullYear(),
+      currentMonth: new Date().getMonth(),
+      dashboardSide: 'front',
+      calendarSide: 'front',
+      selectedDay: null,
+      journals: {},
+      today: new Date(),
+      transitioning: false
+    };
+
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const pad = n => String(n).padStart(2,'0');
+    const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    const ymKey = (y,m) => `${y}-${pad(m+1)}`;
+    const toDate = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+
+    function setPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(page + 'Page').classList.add('active');
+      document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+      state.activePage = page;
+      syncTitles();
+    }
+
+    function setFlip(shellId, flipped) {
+      const shell = document.getElementById(shellId);
+      if(shell) shell.classList.toggle('flipped', !!flipped);
+    }
+
+    function syncTitles() {
+      document.getElementById('dashboardTitle').textContent = state.dashboardSide === 'front' ? 'Dashboard' : 'Goals and Insights';
+      document.getElementById('dashboardEyebrow').textContent = state.dashboardSide === 'front' ? 'Performance dashboard' : 'Goal tracking';
+      document.getElementById('calendarTitle').textContent = state.calendarSide === 'front' ? 'Calendar' : 'Session Journal';
+      document.getElementById('calendarEyebrow').textContent = state.calendarSide === 'front' ? 'Calendar journal' : 'Session Journal';
+      document.getElementById('calendarSub').textContent = state.calendarSide === 'front'
+        ? 'Month and sessions views with a day panel for trades and notes.'
+        : 'Sessions and notes with month-level journal context.';
+    }
+
+    function renderStatsPlaceholders() {
+      document.getElementById('accountValue').textContent = '—';
+      ['statPnl','statRet','statWr','statRr','statPf'].forEach(id => document.getElementById(id).textContent = '—');
+    }
+
+    function renderInsightsPlaceholders() {
+      document.getElementById('insightsList').innerHTML = `<div class="placeholder">awaiting imported trades</div>`;
+    }
+
+    function buildMonthWeeks(year, monthIndex) {
+      const first = new Date(year, monthIndex, 1);
+      const last = new Date(year, monthIndex + 1, 0);
+      const startOffset = first.getDay();
+      const totalDays = last.getDate();
+      const cells = [];
+      for(let i = 0; i < startOffset; i++) cells.push(null);
+      for(let d = 1; d <= totalDays; d++) cells.push(new Date(year, monthIndex, d));
+      while(cells.length % 7 !== 0) cells.push(null);
+      const weeks = [];
+      for(let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
+      return weeks;
+    }
+
+    function renderCalendarMonth() {
+      const label = `${monthNames[state.currentMonth]} ${state.currentYear}`;
+      document.getElementById('monthJumpBtn').textContent = label;
+      document.getElementById('journalJumpBtn').textContent = label;
+      document.getElementById('monthNameTitle').textContent = label;
+      document.getElementById('monthSummary').textContent = 'Monthly P&amp;L: —';
+      const weeksEl = document.getElementById('monthWeeks');
+      const weeks = buildMonthWeeks(state.currentYear, state.currentMonth);
+      let html = '';
+      weeks.forEach(week => {
+        html += '<div class="week-row">';
+        html += '<div class="week-label">WEEK</div>';
+        week.forEach(d => {
+          if(!d) { html += '<div class="week-cell empty"></div>'; return; }
+          const key = iso(d);
+          const today = key === iso(state.today);
+          const selected = key === state.selectedDay;
+          html += `<div class="week-cell ${today ? 'today' : ''} ${selected ? 'selected' : ''}" data-day="${key}"><div class="n">${d.getDate()}</div><div class="c">&nbsp;</div></div>`;
+        });
+        html += '<div class="week-bar">—</div>';
+        html += '</div>';
+      });
+      weeksEl.innerHTML = html;
+      weeksEl.querySelectorAll('[data-day]').forEach(el => el.addEventListener('click', () => selectDay(el.dataset.day, 'month')));
+    }
+
+    function buildJournalRange() {
+      const container = document.getElementById('journalSpine');
+      const start = new Date(state.currentYear - 1, 0, 1);
+      const end = new Date(state.currentYear + 1, 11, 31);
+      let cursor = new Date(start);
+      let currentMonthKey = '';
+      let monthBlock = '';
+      const blocks = [];
+      function flush() { if(monthBlock) { blocks.push(monthBlock); monthBlock = ''; } }
+      while(cursor <= end) {
+        const mk = ymKey(cursor.getFullYear(), cursor.getMonth());
+        if(mk !== currentMonthKey) {
+          flush();
+          currentMonthKey = mk;
+          monthBlock += `<section class="month-section" id="journal-month-${mk}"><div class="month-section-head"><div><div class="month-section-title">${monthNames[cursor.getMonth()]} ${cursor.getFullYear()}</div><div class="month-section-meta">session journal</div></div><div class="month-section-meta">month overview</div></div><div>`;
+        }
+        const key = iso(cursor);
+        const selected = key === state.selectedDay;
+        monthBlock += `<div class="day-row ${selected ? 'selected' : ''}" id="journal-day-${key}" data-day="${key}"><div class="day-date-col"><div class="day-date-num">${pad(cursor.getDate())}</div><div class="day-date-dow">${dayNames[cursor.getDay()]}</div></div><div class="day-bar"></div><div class="day-content"><div class="day-left"><div class="day-status">No trades imported</div><div class="day-note">&nbsp;</div></div><div class="day-right">${cursor.getMonth()+1}/${cursor.getDate()}</div></div></div>`;
+        const next = new Date(cursor); next.setDate(next.getDate() + 1);
+        if(next.getMonth() !== cursor.getMonth() || next > end) monthBlock += '</div></section>';
+        cursor = next;
+      }
+      flush();
+      container.innerHTML = blocks.join('');
+      container.querySelectorAll('[data-day]').forEach(el => el.addEventListener('click', () => selectDay(el.dataset.day, 'journal')));
+    }
+
+    function renderDayPanel(dayKey) {
+      const dateObj = toDate(dayKey);
+      const title = `${dayNames[dateObj.getDay()]}, ${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getFullYear()}`;
+      const monthMode = state.calendarSide === 'front';
+      const target = monthMode ? document.getElementById('dayTradesMonth') : document.getElementById('dayTradesSessions');
+      const journal = monthMode ? document.getElementById('dayJournalMonth') : document.getElementById('dayJournalSessions');
+      const panel = monthMode ? document.getElementById('dayPanelMonth') : document.getElementById('dayPanelSessions');
+      const otherPanel = monthMode ? document.getElementById('dayPanelSessions') : document.getElementById('dayPanelMonth');
+      const panelTitle = monthMode ? document.getElementById('dayPanelMonthTitle') : document.getElementById('dayPanelSessionsTitle');
+      if(target) {
+        target.innerHTML = `<div class="mini-item"><span>Date</span><strong>${dayKey}</strong></div><div class="mini-item"><span>Status</span><strong>No imported trades yet</strong></div><div class="mini-item"><span>Journal</span><strong>${title}</strong></div>`;
+      }
+      if(journal && !journal.value) journal.value = '';
+      if(panelTitle) panelTitle.textContent = title;
+      if(otherPanel) otherPanel.classList.remove('open');
+      if(panel) panel.classList.add('open');
+    }
+
+    function renderCalendar() {
+      const label = `${monthNames[state.currentMonth]} ${state.currentYear}`;
+      document.getElementById('monthJumpBtn').textContent = label;
+      document.getElementById('journalJumpBtn').textContent = label;
+      document.getElementById('monthNameTitle').textContent = label;
+      document.getElementById('sessionMonthNameTitle').textContent = label;
+      document.getElementById('monthSummary').textContent = 'Monthly P&amp;L: —';
+      document.getElementById('sessionSummary').textContent = 'Monthly P&amp;L: —';
+      renderCalendarMonth();
+      buildJournalRange();
+      if(state.selectedDay) {
+        const activeSpine = state.calendarSide === 'back';
+        if(activeSpine) setTimeout(() => scrollJournalTo(state.selectedDay), 40);
+      }
+    }
+
+    function scrollJournalTo(dayKey) {
+      const el = document.getElementById(`journal-day-${dayKey}`);
+      if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+
+    function selectDay(dayKey, source) {
+      state.selectedDay = dayKey;
+      renderCalendarMonth();
+      buildJournalRange();
+      renderDayPanel(dayKey);
+      if(source === 'journal' && state.calendarSide === 'back') setTimeout(() => scrollJournalTo(dayKey), 30);
+    }
+
+    function goToday() {
+      const t = state.today;
+      state.selectedDay = iso(t);
+      state.currentYear = t.getFullYear();
+      state.currentMonth = t.getMonth();
+      renderCalendar();
+      if(state.calendarSide === 'back') setTimeout(() => scrollJournalTo(state.selectedDay), 50);
+    }
+
+    function setupMonthJump(prefix) {
+      const monthBtn = document.getElementById(prefix + 'JumpBtn');
+      const pop = document.getElementById(prefix + 'JumpPopover');
+      const monthSel = document.getElementById(prefix + 'JumpMonth');
+      const yearSel = document.getElementById(prefix + 'JumpYear');
+      const goBtn = document.getElementById(prefix + 'JumpGoBtn');
+      const todayBtn = document.getElementById(prefix + 'JumpTodayBtn');
+      monthNames.forEach((m, i) => { const o = document.createElement('option'); o.value = String(i); o.textContent = m; monthSel.appendChild(o); });
+      for(let y = state.today.getFullYear() - 3; y <= state.today.getFullYear() + 3; y++) { const o = document.createElement('option'); o.value = String(y); o.textContent = String(y); yearSel.appendChild(o); }
+      monthBtn.addEventListener('click', (e) => { e.stopPropagation(); const open = !pop.classList.contains('open'); document.querySelectorAll('.jump-popover.open').forEach(p => p.classList.remove('open')); if(open) { monthSel.value = String(state.currentMonth); yearSel.value = String(state.currentYear); pop.classList.add('open'); } });
+      goBtn.addEventListener('click', () => { const m = Number(monthSel.value); const y = Number(yearSel.value); state.currentMonth = m; state.currentYear = y; state.selectedDay = `${y}-${pad(m+1)}-01`; renderCalendar(); pop.classList.remove('open'); if(state.calendarSide === 'back') scrollJournalTo(state.selectedDay); });
+      todayBtn.addEventListener('click', goToday);
+      monthBtn.textContent = `${monthNames[state.currentMonth]} ${state.currentYear}`;
+    }
+
+    function initJumpPopovers() {
+      setupMonthJump('month');
+      setupMonthJump('journal');
+      document.addEventListener('click', () => document.querySelectorAll('.jump-popover.open').forEach(p => p.classList.remove('open')));
+    }
+
+    function transitionFlip(shellId, flipFn, afterRender) {
+      const shell = document.getElementById(shellId);
+      if(!shell || state.transitioning) return;
+      state.transitioning = true;
+      shell.classList.add('transitioning');
+      window.setTimeout(() => {
+        flipFn();
+        if(typeof afterRender === 'function') afterRender();
+        requestAnimationFrame(() => requestAnimationFrame(() => { shell.classList.remove('transitioning'); state.transitioning = false; }));
+      }, 160);
+    }
+
+    function toggleDashboard() {
+      transitionFlip('dashboardFlip', () => { state.dashboardSide = state.dashboardSide === 'front' ? 'back' : 'front'; setFlip('dashboardFlip', state.dashboardSide === 'back'); }, syncTitles);
+    }
+
+    function toggleCalendar() {
+      transitionFlip('calendarFlip', () => { state.calendarSide = state.calendarSide === 'front' ? 'back' : 'front'; setFlip('calendarFlip', state.calendarSide === 'back'); }, () => {
+        syncTitles();
+        renderCalendar();
+        document.getElementById('dayPanelMonth').classList.remove('open');
+        document.getElementById('dayPanelSessions').classList.remove('open');
+        if(state.calendarSide === 'back' && state.selectedDay) setTimeout(() => scrollJournalTo(state.selectedDay), 40);
+      });
+    }
+
+    document.querySelectorAll('.nav button').forEach(btn => btn.addEventListener('click', () => setPage(btn.dataset.page)));
+    document.getElementById('periodSeg').querySelectorAll('button').forEach(btn => { btn.addEventListener('click', () => { document.getElementById('periodSeg').querySelectorAll('button').forEach(b => b.classList.remove('active')); btn.classList.add('active'); state.period = btn.dataset.range; document.getElementById('customRangeCard').classList.toggle('hide', state.period !== 'CUSTOM'); document.getElementById('rangeLabel').textContent = 'Import trades to populate metrics.'; }); });
+
+    document.getElementById('dashSwapBtn').addEventListener('click', toggleDashboard);
+    document.getElementById('calendarSwapBtn').addEventListener('click', toggleCalendar);
+    document.getElementById('customizeBtn').addEventListener('click', () => alert('Next we will wire layout edit mode here.'));
+    document.getElementById('logBtn').addEventListener('click', () => alert('Next we will wire the log modal here.'));
+    document.getElementById('exportBtn').addEventListener('click', () => alert('Next we will wire CSV export here.'));
+    document.getElementById('applyCustomBtn').addEventListener('click', () => { document.getElementById('rangeLabel').textContent = 'Import trades to populate metrics.'; });
+
+    document.getElementById('closeDayBtnMonth').addEventListener('click', () => { document.getElementById('dayTradesMonth').innerHTML = '<div class="placeholder">Select a day</div>'; document.getElementById('dayPanelMonthTitle').textContent = 'Select a day'; document.getElementById('dayPanelMonth').classList.remove('open'); });
+    document.getElementById('closeDayBtnSessions').addEventListener('click', () => { document.getElementById('dayTradesSessions').innerHTML = '<div class="placeholder">Select a session</div>'; document.getElementById('dayPanelSessionsTitle').textContent = 'Select a session'; document.getElementById('dayPanelSessions').classList.remove('open'); });
+    document.getElementById('saveJournalMonthBtn').addEventListener('click', () => alert('Journal saved.'));
+    document.getElementById('saveJournalSessionsBtn').addEventListener('click', () => alert('Journal saved.'));
+    document.getElementById('importBtn').addEventListener('click', () => alert('Next we will wire import.'));
+    document.getElementById('clearFiltersBtn').addEventListener('click', () => ['tradeSearch','tradeTicker','tradeTag','tradePnlFilter'].forEach(id => document.getElementById(id).value = ''));
+
+    function init() {
+      state.selectedDay = iso(state.today);
+      state.currentYear = state.today.getFullYear();
+      state.currentMonth = state.today.getMonth();
+      renderStatsPlaceholders();
+      renderInsightsPlaceholders();
+      syncTitles();
+      renderCalendar();
+      initJumpPopovers();
+      setPage('dashboard');
+      setFlip('dashboardFlip', false);
+      setFlip('calendarFlip', false);
+      document.getElementById('dayJournalMonth').value = '';
+      document.getElementById('dayJournalSessions').value = '';
+    }
+
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>
