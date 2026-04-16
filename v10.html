@@ -191,19 +191,19 @@
     .btn.green:hover{background:rgba(31,214,122,.18)}
     .swap-btn{
       width:40px;
+      height:40px;
       display:inline-grid;
       place-items:center;
-      padding:9px 0;
-      font-size:16px;
-      line-height:1;
+      padding:0;
     }
+    .swap-btn svg{width:18px;height:18px;display:block;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 
     .main{padding:18px;flex:1}
     .page{display:none}
     .page.active{display:block}
 
     .title{
-      margin:0 0 10px 0;
+      margin:0;
       font-family:"Inter Tight",Inter,system-ui,sans-serif;
       font-size:20px;
       font-weight:900;
@@ -234,6 +234,13 @@
       flex-wrap:wrap;
       margin-bottom:14px;
     }
+    .page-headline{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .headline-copy{min-width:0}
     .toolbar{
       display:flex;
       align-items:center;
@@ -454,7 +461,6 @@
       font-weight:900;
       letter-spacing:-.02em;
       line-height:1.15;
-      transition:opacity .2s ease;
     }
     .month-sub{
       font-size:10px;
@@ -535,8 +541,8 @@
     .week-cell.green{background:rgba(31,214,122,.08)}
     .week-cell.red{background:rgba(240,72,74,.08)}
     .week-cell.today{outline:1px solid var(--accent)}
-    .week-cell .n{font-size:11px;color:var(--muted);font-weight:700}
-    .week-cell .p{font-size:12px;font-weight:900;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .week-cell .n{font-size:12px;color:#8b91a4;font-weight:800;letter-spacing:.01em}
+    .week-cell .p{font-size:12px;font-weight:900;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#dfe5f3}
     .week-cell .c{font-size:10px;color:var(--muted)}
     .week-bar{
       border-radius:12px;
@@ -700,15 +706,26 @@
       <!-- ===== DASHBOARD ===== -->
       <section id="dashboardPage" class="page active">
         <div class="section-head">
-          <div>
-            <div class="eyebrow" id="dashboardEyebrow">Performance dashboard</div>
-            <div class="title" id="dashboardTitle">Dashboard</div>
-            <div class="sub" id="rangeLabel">Mar 18, 2026 – Apr 16, 2026</div>
+          <div class="page-headline">
+            <button class="btn alt swap-btn" id="dashSwapBtn" aria-label="Flip dashboard">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 7h12a6 6 0 0 1 6 6" />
+                <path d="M21 7l-3-3" />
+                <path d="M21 7l-3 3" />
+                <path d="M21 17H9a6 6 0 0 1-6-6" />
+                <path d="M3 17l3-3" />
+                <path d="M3 17l3 3" />
+              </svg>
+            </button>
+            <div class="headline-copy">
+              <div class="eyebrow" id="dashboardEyebrow">Performance dashboard</div>
+              <div class="title" id="dashboardTitle">Dashboard</div>
+              <div class="sub" id="rangeLabel">Mar 18, 2026 – Apr 16, 2026</div>
+            </div>
           </div>
 
           <div class="toolbar">
             <button class="btn alt" id="customizeBtn">Customize</button>
-            <button class="btn alt swap-btn" id="dashSwapBtn" aria-label="Flip dashboard">⟲</button>
             <div class="seg" id="periodSeg" aria-label="Date range">
               <button data-range="1D">1D</button>
               <button data-range="1W">1W</button>
@@ -835,13 +852,22 @@
       <!-- ===== CALENDAR ===== -->
       <section id="calendarPage" class="page">
         <div class="section-head">
-          <div>
-            <div class="eyebrow" id="calendarEyebrow">Calendar journal</div>
-            <div class="title" id="calendarTitle">Calendar</div>
-            <div class="sub" id="calendarSub">Month and sessions views with a day panel for trades and notes.</div>
-          </div>
-          <div class="toolbar">
-            <button class="btn alt swap-btn" id="calendarSwapBtn" aria-label="Flip calendar">⟲</button>
+          <div class="page-headline">
+            <button class="btn alt swap-btn" id="calendarSwapBtn" aria-label="Flip calendar">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 7h12a6 6 0 0 1 6 6" />
+                <path d="M21 7l-3-3" />
+                <path d="M21 7l-3 3" />
+                <path d="M21 17H9a6 6 0 0 1-6-6" />
+                <path d="M3 17l3-3" />
+                <path d="M3 17l3 3" />
+              </svg>
+            </button>
+            <div class="headline-copy">
+              <div class="eyebrow" id="calendarEyebrow">Calendar journal</div>
+              <div class="title" id="calendarTitle">Calendar</div>
+              <div class="sub" id="calendarSub">Month and sessions views with a day panel for trades and notes.</div>
+            </div>
           </div>
         </div>
 
@@ -861,7 +887,7 @@
                 <div class="card calendar-main">
                   <div class="calendar-head">
                     <div>
-                      <div class="month-title">Wall Calendar</div>
+                      <div class="month-title" id="monthNameTitle">April 2026</div>
                       <div class="month-sub">Month view</div>
                     </div>
                   </div>
@@ -911,7 +937,7 @@
                 <div class="card calendar-main">
                   <div class="calendar-head">
                     <div>
-                      <div class="month-title">Journal</div>
+                      <div class="month-title" id="sessionMonthNameTitle">April 2026</div>
                       <div class="month-sub">Sessions view</div>
                     </div>
                   </div>
@@ -1048,7 +1074,6 @@
     const fmtCur = n => `$${Math.abs(n).toLocaleString('en-US',{maximumFractionDigits:2, minimumFractionDigits:2})}`;
     const fmtPct = n => `${n>=0?'+':''}${n.toFixed(2)}%`;
     const fmtSigned = n => `${n>=0?'+':'-'}${fmtCur(n)}`;
-    const safe = v => Number.isFinite(+v) ? +v : 0;
 
     function setPage(page) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1060,26 +1085,20 @@
     }
 
     function setFlip(shellId, flipped) {
-      const shell = document.getElementById(shellId);
-      shell.classList.toggle('flipped', !!flipped);
+      document.getElementById(shellId).classList.toggle('flipped', !!flipped);
     }
 
     function syncDashboardTitle() {
-      const title = document.getElementById('dashboardTitle');
-      const eyebrow = document.getElementById('dashboardEyebrow');
-      title.textContent = state.dashboardSide === 'front' ? 'Dashboard' : 'Goals and Insights';
-      eyebrow.textContent = state.dashboardSide === 'front' ? 'Performance dashboard' : 'Goal tracking';
+      document.getElementById('dashboardTitle').textContent = state.dashboardSide === 'front' ? 'Dashboard' : 'Goals and Insights';
+      document.getElementById('dashboardEyebrow').textContent = state.dashboardSide === 'front' ? 'Performance dashboard' : 'Goal tracking';
     }
 
     function syncCalendarTitle() {
-      const title = document.getElementById('calendarTitle');
-      const eyebrow = document.getElementById('calendarEyebrow');
-      const sub = document.getElementById('calendarSub');
-      title.textContent = state.calendarSide === 'front' ? 'Calendar' : 'Journal';
-      eyebrow.textContent = state.calendarSide === 'front' ? 'Calendar journal' : 'Session journal';
-      sub.textContent = state.calendarSide === 'front'
-        ? 'Month view with a day panel for trades and notes.'
-        : 'Sessions view with journal entries and session summaries.';
+      document.getElementById('calendarTitle').textContent = state.calendarSide === 'front' ? 'Calendar' : 'Journal';
+      document.getElementById('calendarEyebrow').textContent = state.calendarSide === 'front' ? 'Calendar journal' : 'Session journal';
+      document.getElementById('calendarSub').textContent = state.calendarSide === 'front'
+        ? 'Month and sessions views with a day panel for trades and notes.'
+        : 'Sessions and notes with month-level journal context.';
     }
 
     function toggleDashboard() {
@@ -1193,6 +1212,7 @@
       const weeksEl = document.getElementById('monthWeeks');
       const weeks = buildMonthWeeks(state.currentYear, state.currentMonth);
       document.getElementById('monthTitle').textContent = `${monthNames[state.currentMonth]} ${state.currentYear}`;
+      document.getElementById('monthNameTitle').textContent = `${monthNames[state.currentMonth]} ${state.currentYear}`;
       document.getElementById('monthSummary').textContent = `Monthly P&L: ${fmtSigned(monthTotals())}`;
       let html = '';
       weeks.forEach(week => {
@@ -1229,6 +1249,7 @@
     function renderSessionsView() {
       const listEl = document.getElementById('sessionsList');
       document.getElementById('sessionMonthTitle').textContent = `${monthNames[state.currentMonth]} ${state.currentYear}`;
+      document.getElementById('sessionMonthNameTitle').textContent = `${monthNames[state.currentMonth]} ${state.currentYear}`;
       document.getElementById('sessionSummary').textContent = `Monthly P&L: ${fmtSigned(monthTotals())}`;
       const days = [];
       const totalDays = new Date(state.currentYear, state.currentMonth + 1, 0).getDate();
@@ -1255,7 +1276,6 @@
     function renderDayPanel(dayKey, mode) {
       const item = demoDays[dayKey] || { pnl: 0, trades: 0, symbols: [], note: 'No trades' };
       const d = toDate(dayKey);
-      const title = `${dayNames[d.getDay()]}, ${monthNames[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
       const summary = item.trades ? `${item.trades} trade${item.trades===1?'':'s'} · ${fmtSigned(item.pnl)}` : 'No trades';
       const html = item.trades
         ? `
@@ -1270,8 +1290,10 @@
           <div class="mini-item"><span>Journal</span><strong>${item.note}</strong></div>`;
       const titleEl = mode === 'month' ? document.getElementById('dayTradesMonth') : document.getElementById('dayTradesSessions');
       const journalEl = mode === 'month' ? document.getElementById('dayJournalMonth') : document.getElementById('dayJournalSessions');
-      const topTitle = mode === 'month' ? document.querySelector('#dayPanelMonth .w-title') : document.querySelector('#dayPanelSessions .w-title');
-      if(topTitle) topTitle.textContent = 'Day View';
+      const titleNode = mode === 'month' ? document.querySelector('#dayPanelMonth .w-title') : document.querySelector('#dayPanelSessions .w-title');
+      const subNode = mode === 'month' ? document.querySelector('#dayPanelMonth .section-head .sub') : document.querySelector('#dayPanelSessions .section-head .sub');
+      if(titleNode) titleNode.textContent = 'Day View';
+      if(subNode) subNode.textContent = summary;
       if(titleEl) titleEl.innerHTML = html;
       if(journalEl) journalEl.value = state.journals[dayKey] || item.note || '';
     }
