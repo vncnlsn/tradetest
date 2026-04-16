@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TrackYourTrades v10 Scaffold</title>
+  <title>TrackYourTrades v10</title>
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@700;800;900&display=swap');
 
     :root {
       --bg: #141518;
@@ -23,8 +24,7 @@
       --accent: #4f7cff;
       --gold: #f0b429;
       --shadow: 0 14px 36px rgba(0, 0, 0, 0.32);
-      --r: 15px;
-      --rs: 11px;
+      --r: 14px;
       --gap: 14px;
     }
 
@@ -37,9 +37,9 @@
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 14px;
       overflow-x: hidden;
-      text-rendering: optimizeLegibility;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
 
     button, input, select, textarea { font: inherit; }
@@ -78,8 +78,8 @@
       height: 2px;
       background: var(--profit);
       border-radius: 999px;
-      box-shadow: 0 0 0 1px rgba(31, 214, 122, 0.08);
       flex: 0 0 auto;
+      box-shadow: 0 0 0 1px rgba(31,214,122,0.08);
     }
     .brand-text {
       font-family: "Inter Tight", Inter, system-ui, sans-serif;
@@ -88,11 +88,11 @@
       letter-spacing: 0.2em;
       text-transform: uppercase;
       display: inline-flex;
-      gap: 0;
       align-items: center;
+      gap: 0;
     }
     .brand-text .track,
-    .brand-text .trades { color: var(--text); }
+    .brand-text .trades { color: #fff; }
     .brand-text .your { color: var(--profit); }
 
     .nav {
@@ -134,7 +134,6 @@
       color: var(--muted);
       font-size: 12px;
       white-space: nowrap;
-      font-family: Inter, system-ui, sans-serif;
     }
     .greeting em { color: var(--text); font-style: normal; }
 
@@ -190,7 +189,7 @@
       border: 1px solid var(--profit);
       color: var(--profit);
     }
-    .btn.green:hover { background: rgba(31, 214, 122, 0.18); }
+    .btn.green:hover { background: rgba(31,214,122,0.18); }
 
     .main { padding: 18px; flex: 1; }
     .page { display: none; }
@@ -266,22 +265,22 @@
       border: 1px solid var(--border);
       border-radius: var(--r);
       box-shadow: var(--shadow);
-      padding: 18px;
+      padding: 16px;
     }
 
     .grid { display: grid; gap: var(--gap); }
-    .stat-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); margin-bottom: var(--gap); }
-    .two-col { grid-template-columns: 1.5fr 1fr; }
-    .widget-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); margin-top: var(--gap); }
+    .stats { grid-template-columns: repeat(5, minmax(0, 1fr)); margin-bottom: var(--gap); }
+    .two { grid-template-columns: 1.5fr 1fr; }
+    .widgets { grid-template-columns: repeat(12, minmax(0, 1fr)); margin-top: var(--gap); }
 
     .stat {
+      min-height: 114px;
       background: linear-gradient(180deg, var(--bg2), #1d2027);
       border: 1px solid var(--border);
       border-radius: var(--r);
       padding: 16px;
-      min-height: 114px;
     }
-    .stat label {
+    .stat .label {
       display: flex;
       justify-content: space-between;
       gap: 8px;
@@ -293,7 +292,7 @@
       font-weight: 800;
     }
     .stat .val {
-      font-size: 25px;
+      font-size: 22px;
       line-height: 1;
       font-weight: 900;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -314,58 +313,52 @@
     .widget.wide { grid-column: span 6; }
     .widget.full { grid-column: span 12; }
 
-    .section-card-title {
+    .w-title {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 14px;
+      gap: 6px;
+      font-size: 13px;
       font-weight: 800;
-      letter-spacing: -0.01em;
-      color: #dfe4ef;
-      margin-bottom: 10px;
-      line-height: 1.2;
+      letter-spacing: 0.01em;
       font-family: "Inter Tight", Inter, system-ui, sans-serif;
-    }
-    .info-dot {
-      width: 15px;
-      height: 15px;
-      border-radius: 999px;
-      display: inline-grid;
-      place-items: center;
-      border: 1px solid var(--border2);
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 800;
       line-height: 1;
+      color: #e4e8f2;
+      margin-bottom: 12px;
+    }
+    .info {
+      width: 14px;
+      height: 14px;
+      border: 1px solid var(--border2);
+      border-radius: 50%;
+      font-size: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
       cursor: help;
       position: relative;
       flex: 0 0 auto;
       background: rgba(255,255,255,0.03);
       font-family: Inter, system-ui, sans-serif;
     }
-    .info-dot::after {
+    .info:hover::after {
       content: attr(data-tip);
       position: absolute;
-      left: 50%;
       bottom: calc(100% + 8px);
+      left: 50%;
       transform: translateX(-50%);
-      width: max-content;
-      max-width: 260px;
-      white-space: normal;
       background: #1e2230;
       border: 1px solid var(--border2);
-      border-radius: 10px;
-      padding: 8px 10px;
+      border-radius: 8px;
+      padding: 6px 8px;
       color: #d7ddea;
       font-size: 11px;
-      line-height: 1.5;
+      line-height: 1.4;
+      white-space: nowrap;
       box-shadow: var(--shadow);
-      opacity: 0;
       pointer-events: none;
-      transition: 0.14s ease;
-      z-index: 30;
+      z-index: 50;
     }
-    .info-dot:hover::after { opacity: 1; }
 
     .placeholder {
       min-height: 180px;
@@ -374,7 +367,7 @@
       color: var(--muted);
       border: 1px dashed #394154;
       border-radius: 14px;
-      background: rgba(255, 255, 255, 0.02);
+      background: rgba(255,255,255,0.02);
       text-align: center;
       padding: 20px;
       line-height: 1.6;
@@ -400,7 +393,6 @@
       color: var(--muted2);
       background: rgba(255,255,255,0.01);
       font-weight: 800;
-      font-family: Inter, system-ui, sans-serif;
     }
     tr:hover td { background: rgba(255,255,255,0.02); }
 
@@ -532,12 +524,12 @@
     .hide { display: none !important; }
 
     @media (max-width: 1100px) {
-      .stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .two-col, .calendar-shell { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .two, .calendar-shell { grid-template-columns: 1fr; }
       .widget, .widget.wide { grid-column: span 6; }
     }
     @media (max-width: 820px) {
-      .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .widget, .widget.wide, .widget.full { grid-column: span 12; }
       .topbar {
         height: auto;
@@ -549,7 +541,7 @@
       .main { padding: 12px; }
     }
     @media (max-width: 540px) {
-      .stat-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr; }
       .seg button, .nav button, .btn { padding: 9px 11px; }
     }
   </style>
@@ -624,114 +616,84 @@
           </div>
         </div>
 
-        <div class="grid stat-grid">
-          <div class="stat">
-            <label>Total P&L <span>closed</span></label>
+        <div class="grid stats">
+          <div class="card stat">
+            <div class="label">Total P&L <span>closed</span></div>
             <div class="val" id="statPnl">—</div>
             <div class="meta" id="statPnlMeta">—</div>
           </div>
-          <div class="stat">
-            <label>Return <span>vs start</span></label>
+          <div class="card stat">
+            <div class="label">Return <span>vs start</span></div>
             <div class="val" id="statRet">—</div>
             <div class="meta" id="statRetMeta">—</div>
           </div>
-          <div class="stat">
-            <label>Win Rate <span>consistency</span></label>
+          <div class="card stat">
+            <div class="label">Win Rate <span>consistency</span></div>
             <div class="val" id="statWr">—</div>
             <div class="meta" id="statWrMeta">—</div>
           </div>
-          <div class="stat">
-            <label>Avg Win / Loss <span>edge</span></label>
+          <div class="card stat">
+            <div class="label">Avg Win / Loss <span>edge</span></div>
             <div class="val" id="statRr">—</div>
             <div class="meta" id="statRrMeta">—</div>
           </div>
-          <div class="stat">
-            <label>Trades <span>in period</span></label>
+          <div class="card stat">
+            <div class="label">Trades <span>in period</span></div>
             <div class="val" id="statTrades">—</div>
             <div class="meta" id="statTradeMeta">—</div>
           </div>
         </div>
 
-        <div class="grid two-col" style="margin-top:14px;">
+        <div class="grid two" style="margin-top:14px;">
           <div class="card">
-            <div class="section-head" style="margin-bottom:10px;">
+            <div class="section-head" style="margin-bottom:12px;">
               <div>
-                <div class="eyebrow">Goal mode</div>
-                <div class="section-card-title">Actual vs Goal vs Projected <span class="info-dot" data-tip="Goal pacing and trajectory will live here.">?</span></div>
-                <div class="sub">This area will hold the goal curve, pacing, and current trajectory view.</div>
+                <div class="w-title">Goal <span class="info" data-tip="Progress vs target">?</span></div>
               </div>
               <div class="toolbar">
                 <button class="btn alt" id="toggleGoalBtn">Show Goal</button>
               </div>
             </div>
-            <div class="placeholder" style="height:260px;">Goal chart placeholder<br />actual / goal / projected</div>
+            <div class="placeholder" style="height:260px;">chart</div>
             <div id="goalStatus" style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;"></div>
           </div>
 
           <div class="card">
-            <div class="section-head" style="margin-bottom:10px;">
+            <div class="section-head" style="margin-bottom:12px;">
               <div>
-                <div class="eyebrow">Smart insights</div>
-                <div class="section-card-title">Behavior summaries <span class="info-dot" data-tip="Concise pattern recognition based on tags and performance. No advice.">?</span></div>
-                <div class="sub">Pattern recognition only. No advice, no noise.</div>
+                <div class="w-title">Insights <span class="info" data-tip="Behavior patterns">?</span></div>
               </div>
             </div>
             <div id="insightsList" class="mini-list">
-              <div class="placeholder">Insights placeholder</div>
+              <div class="placeholder">insights</div>
             </div>
           </div>
         </div>
 
-        <div class="grid widget-grid" id="widgetGrid">
-          <div class="card widget wide" data-widget="daily">
-            <div class="section-head">
-              <div>
-                <div class="eyebrow">Daily P&L</div>
-                <div class="section-card-title">Daily P&L <span class="info-dot" data-tip="Daily performance for the selected range.">?</span></div>
-              </div>
-            </div>
-            <div class="placeholder">Daily chart placeholder</div>
+        <div class="grid widgets">
+          <div class="card widget wide">
+            <div class="w-title">Daily <span class="info" data-tip="Daily P&L">?</span></div>
+            <div class="placeholder"></div>
           </div>
 
-          <div class="card widget wide" data-widget="ticker">
-            <div class="section-head">
-              <div>
-                <div class="eyebrow">Ticker breakdown</div>
-                <div class="section-card-title">By Ticker <span class="info-dot" data-tip="Summed performance by symbol for the current period.">?</span></div>
-              </div>
-            </div>
-            <div class="placeholder">Ticker analytics placeholder</div>
+          <div class="card widget wide">
+            <div class="w-title">Ticker <span class="info" data-tip="By symbol">?</span></div>
+            <div class="placeholder"></div>
           </div>
 
-          <div class="card widget wide" data-widget="calendar-preview">
-            <div class="section-head">
-              <div>
-                <div class="eyebrow">Calendar preview</div>
-                <div class="section-card-title">Quick day view <span class="info-dot" data-tip="Fast scan of calendar performance without leaving the dashboard.">?</span></div>
-              </div>
-            </div>
-            <div class="placeholder">Mini calendar placeholder</div>
+          <div class="card widget wide">
+            <div class="w-title">Streaks <span class="info" data-tip="Win/loss runs">?</span></div>
+            <div class="placeholder"></div>
           </div>
 
-          <div class="card widget full" data-widget="recent">
-            <div class="section-head">
-              <div>
-                <div class="eyebrow">Recent activity</div>
-                <div class="section-card-title">Recent Trades <span class="info-dot" data-tip="The latest trades in the filtered period, with notes and key values.">?</span></div>
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Date</th><th>Ticker</th><th>Entry</th><th>Exit</th><th>Qty</th><th>P&L</th><th>Notes</th>
-                  </tr>
-                </thead>
-                <tbody id="recentBody">
-                  <tr><td colspan="7" style="padding:18px;color:var(--muted);text-align:center;">Recent trades placeholder</td></tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="card widget wide">
+            <div class="w-title">Recent <span class="info" data-tip="Recent trades">?</span></div>
+            <div class="placeholder"></div>
+          </div>
+
+          <div class="card widget full">
+            <div class="w-title">Performance <span class="info" data-tip="Key stats by setup">?</span></div>
+            <div class="placeholder"></div>
           </div>
         </div>
       </section>
@@ -742,7 +704,7 @@
           <div>
             <div class="eyebrow">Calendar journal</div>
             <div class="title">Calendar</div>
-            <div class="sub">A cleaner calendar view with a dedicated day panel for trades and journal notes.</div>
+            <div class="sub">A full calendar and session view with a side panel for the selected day.</div>
           </div>
         </div>
 
@@ -762,27 +724,25 @@
           <div class="card">
             <div class="sub" id="calendarSummary">—</div>
             <div id="calendarContent" style="margin-top:12px;">
-              <div class="placeholder">Calendar placeholder</div>
+              <div class="placeholder">calendar</div>
             </div>
           </div>
 
           <aside class="card side" id="dayPanel">
-            <div class="section-head" style="margin-bottom:10px;">
+            <div class="section-head" style="margin-bottom:12px;">
               <div>
-                <div class="eyebrow">Selected day</div>
-                <div class="section-card-title" id="dayTitle">Pick a day</div>
-                <div class="sub" id="daySub">—</div>
+                <div class="w-title">Day <span class="info" data-tip="Selected date details">?</span></div>
               </div>
               <button class="btn alt" id="closeDayBtn">×</button>
             </div>
 
             <div id="dayTrades" class="mini-list">
-              <div class="placeholder">Day trade list placeholder</div>
+              <div class="placeholder">day</div>
             </div>
 
             <div style="margin-top:14px;">
               <label class="note">Session journal</label>
-              <textarea id="dayJournal" rows="6" style="width:100%;margin-top:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:14px;padding:12px;resize:vertical;" placeholder="What happened today?"></textarea>
+              <textarea id="dayJournal" rows="6" style="width:100%;margin-top:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:14px;padding:12px;resize:vertical;" placeholder="..."></textarea>
               <div style="display:flex;justify-content:flex-end;margin-top:8px;">
                 <button class="btn" id="saveJournalBtn">Save note</button>
               </div>
@@ -797,7 +757,7 @@
           <div>
             <div class="eyebrow">All trades</div>
             <div class="title">Trades</div>
-            <div class="sub">The backbone of the app: sortable, filterable, editable, and built to stay fast.</div>
+            <div class="sub">Sortable, filterable, editable, and optimized for fast review.</div>
           </div>
           <div class="toolbar">
             <button class="btn alt" id="importBtn">Import CSV / PDF</button>
@@ -845,7 +805,7 @@
                 </tr>
               </thead>
               <tbody id="tradeBody">
-                <tr><td colspan="11" style="padding:18px;color:var(--muted);text-align:center;">Trade table placeholder</td></tr>
+                <tr><td colspan="11" style="padding:18px;color:var(--muted);text-align:center;">trade table</td></tr>
               </tbody>
             </table>
           </div>
@@ -858,22 +818,22 @@
           <div>
             <div class="eyebrow">Help / notes</div>
             <div class="title">Help</div>
-            <div class="sub">Use this page for onboarding, privacy language, support details, and product notes.</div>
+            <div class="sub">Short onboarding, privacy, and support notes.</div>
           </div>
         </div>
 
         <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;">
           <div class="card">
-            <div class="section-card-title">Quick start <span class="info-dot" data-tip="A short guide for first-time users. Keep it very practical.">?</span></div>
-            <div class="note">Explain the import flow, manual logging, export backup, and how the local-first storage works.</div>
+            <div class="w-title">Quick start <span class="info" data-tip="First steps">?</span></div>
+            <div class="note">Import, log, export.</div>
           </div>
           <div class="card">
-            <div class="section-card-title">Privacy <span class="info-dot" data-tip="State clearly that data stays on-device unless the user exports it.">?</span></div>
-            <div class="note">Put the no-cloud, browser-only promise here in a clear and reassuring way.</div>
+            <div class="w-title">Privacy <span class="info" data-tip="Local-first storage">?</span></div>
+            <div class="note">Browser-only, no cloud database.</div>
           </div>
           <div class="card" style="grid-column:span 2;">
-            <div class="section-card-title">Product notes <span class="info-dot" data-tip="Release notes, known limitations, and support details go here.">?</span></div>
-            <div class="note">Use this for release notes, known limitations, and support contact details.</div>
+            <div class="w-title">Product notes <span class="info" data-tip="Release notes and support">?</span></div>
+            <div class="note">Use this space for version notes and support details.</div>
           </div>
         </div>
       </section>
@@ -919,18 +879,10 @@
       document.getElementById('toggleGoalBtn').textContent = state.showGoal ? 'Hide Goal' : 'Show Goal';
     });
 
-    document.getElementById('customizeBtn').addEventListener('click', () => {
-      alert('Next we will wire layout edit mode here.');
-    });
-    document.getElementById('logBtn').addEventListener('click', () => {
-      alert('Next we will wire the log modal here.');
-    });
-    document.getElementById('exportBtn').addEventListener('click', () => {
-      alert('Next we will wire CSV export here.');
-    });
-    document.getElementById('goalBtn').addEventListener('click', () => {
-      alert('Next we will wire the goal modal here.');
-    });
+    document.getElementById('customizeBtn').addEventListener('click', () => alert('Next we will wire layout edit mode here.'));
+    document.getElementById('logBtn').addEventListener('click', () => alert('Next we will wire the log modal here.'));
+    document.getElementById('exportBtn').addEventListener('click', () => alert('Next we will wire CSV export here.'));
+    document.getElementById('goalBtn').addEventListener('click', () => alert('Next we will wire the goal modal here.'));
     document.getElementById('applyCustomBtn').addEventListener('click', () => {
       document.getElementById('rangeLabel').textContent = 'Custom range';
     });
@@ -939,27 +891,34 @@
       const summary = document.getElementById('calendarSummary');
       const content = document.getElementById('calendarContent');
       const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
       if (state.calView === 'rows') {
-        summary.textContent = 'Sessions view placeholder';
+        summary.textContent = 'Sessions view';
         content.innerHTML = `
           <div class="rows-view">
             <div class="row-day">
               <div class="row-date-col"><div class="row-date-num">01</div><div class="row-date-dow">Mon</div></div>
               <div class="row-bar g"></div>
-              <div class="row-content"><div class="row-pnl-line"><span class="row-pnl">+$420.00</span><span class="row-trade-count">3 trades</span></div><div class="row-journal-preview">Strong morning session. Kept size under control.</div></div>
+              <div class="row-content"><div class="row-pnl-line"><span class="row-pnl">+$420.00</span><span class="row-trade-count">3 trades</span></div><div class="row-journal-preview">Strong morning session.</div></div>
               <div class="row-meta-col"><div class="row-symbols">NVDA · AAPL</div></div>
             </div>
             <div class="row-day">
               <div class="row-date-col"><div class="row-date-num">02</div><div class="row-date-dow">Tue</div></div>
               <div class="row-bar r"></div>
-              <div class="row-content"><div class="row-pnl-line"><span class="row-pnl">-$180.00</span><span class="row-trade-count">2 trades</span></div><div class="row-journal-preview">Chased the open and gave it back.</div></div>
+              <div class="row-content"><div class="row-pnl-line"><span class="row-pnl">-$180.00</span><span class="row-trade-count">2 trades</span></div><div class="row-journal-preview">Chased the open.</div></div>
               <div class="row-meta-col"><div class="row-symbols">TSLA</div></div>
+            </div>
+            <div class="row-day">
+              <div class="row-date-col"><div class="row-date-num">03</div><div class="row-date-dow">Wed</div></div>
+              <div class="row-bar g"></div>
+              <div class="row-content"><div class="row-pnl-line"><span class="row-pnl">+$95.00</span><span class="row-trade-count">1 trade</span></div><div class="row-journal-preview">Patient entry.</div></div>
+              <div class="row-meta-col"><div class="row-symbols">AMD</div></div>
             </div>
           </div>`;
         return;
       }
 
-      summary.textContent = 'Month view placeholder';
+      summary.textContent = 'Month view';
       content.innerHTML = `
         <div class="month-grid">
           ${days.map(d => `<div class="dow">${d}</div>`).join('')}
@@ -968,6 +927,8 @@
           <div class="day red"><div class="n">2</div><div><div class="p">-$180.00</div><div class="c">2 trades</div></div></div>
           <div class="day"><div class="n">3</div><div><div class="c">No trades</div></div></div>
           <div class="day green"><div class="n">4</div><div><div class="p">+$95.00</div><div class="c">1 trade</div></div></div>
+          <div class="day green"><div class="n">5</div><div><div class="p">+$240.00</div><div class="c">2 trades</div></div></div>
+          <div class="day red"><div class="n">6</div><div><div class="p">-$60.00</div><div class="c">1 trade</div></div></div>
         </div>`;
     }
 
