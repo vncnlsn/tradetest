@@ -24,7 +24,7 @@
       --accent: #4f7cff;
       --gold: #f0b429;
       --shadow: 0 14px 36px rgba(0, 0, 0, 0.32);
-      --r: 14px;
+      --r: 15px;
       --gap: 14px;
     }
 
@@ -313,10 +313,11 @@
     .widget.wide { grid-column: span 6; }
     .widget.full { grid-column: span 12; }
 
+    /* Titles use hover text directly on the title line */
     .w-title {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 0;
       font-size: 13px;
       font-weight: 800;
       letter-spacing: 0.01em;
@@ -324,40 +325,29 @@
       line-height: 1;
       color: #e4e8f2;
       margin-bottom: 12px;
-    }
-    .info {
-      width: 14px;
-      height: 14px;
-      border: 1px solid var(--border2);
-      border-radius: 50%;
-      font-size: 10px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--muted);
-      cursor: help;
       position: relative;
-      flex: 0 0 auto;
-      background: rgba(255,255,255,0.03);
-      font-family: Inter, system-ui, sans-serif;
+      cursor: help;
+      padding-right: 2px;
     }
-    .info:hover::after {
+    .w-title:hover::after {
       content: attr(data-tip);
       position: absolute;
-      bottom: calc(100% + 8px);
-      left: 50%;
-      transform: translateX(-50%);
+      left: 0;
+      top: calc(100% + 8px);
       background: #1e2230;
       border: 1px solid var(--border2);
       border-radius: 8px;
       padding: 6px 8px;
       color: #d7ddea;
       font-size: 11px;
-      line-height: 1.4;
+      line-height: 1.45;
       white-space: nowrap;
       box-shadow: var(--shadow);
-      pointer-events: none;
       z-index: 50;
+      pointer-events: none;
+      max-width: 320px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .placeholder {
@@ -648,7 +638,7 @@
           <div class="card">
             <div class="section-head" style="margin-bottom:12px;">
               <div>
-                <div class="w-title">Goal <span class="info" data-tip="Progress vs target">?</span></div>
+                <div class="w-title" data-tip="Progress versus target and pace">Goal Trajectory</div>
               </div>
               <div class="toolbar">
                 <button class="btn alt" id="toggleGoalBtn">Show Goal</button>
@@ -661,7 +651,7 @@
           <div class="card">
             <div class="section-head" style="margin-bottom:12px;">
               <div>
-                <div class="w-title">Insights <span class="info" data-tip="Behavior patterns">?</span></div>
+                <div class="w-title" data-tip="Pattern summaries from your trade history">Behavior Analytics</div>
               </div>
             </div>
             <div id="insightsList" class="mini-list">
@@ -672,27 +662,27 @@
 
         <div class="grid widgets">
           <div class="card widget wide">
-            <div class="w-title">Daily <span class="info" data-tip="Daily P&L">?</span></div>
+            <div class="w-title" data-tip="Daily performance within the selected range">Daily P&L</div>
             <div class="placeholder"></div>
           </div>
 
           <div class="card widget wide">
-            <div class="w-title">Ticker <span class="info" data-tip="By symbol">?</span></div>
+            <div class="w-title" data-tip="Performance grouped by symbol">Ticker Performance</div>
             <div class="placeholder"></div>
           </div>
 
           <div class="card widget wide">
-            <div class="w-title">Streaks <span class="info" data-tip="Win/loss runs">?</span></div>
+            <div class="w-title" data-tip="Win and loss streak patterns">Streak Profile</div>
             <div class="placeholder"></div>
           </div>
 
           <div class="card widget wide">
-            <div class="w-title">Recent <span class="info" data-tip="Recent trades">?</span></div>
+            <div class="w-title" data-tip="Most recent entries and edits">Recent Trades</div>
             <div class="placeholder"></div>
           </div>
 
           <div class="card widget full">
-            <div class="w-title">Performance <span class="info" data-tip="Key stats by setup">?</span></div>
+            <div class="w-title" data-tip="Best and worst setup context">Setup Breakdown</div>
             <div class="placeholder"></div>
           </div>
         </div>
@@ -731,7 +721,7 @@
           <aside class="card side" id="dayPanel">
             <div class="section-head" style="margin-bottom:12px;">
               <div>
-                <div class="w-title">Day <span class="info" data-tip="Selected date details">?</span></div>
+                <div class="w-title" data-tip="Selected day summary and notes">Day View</div>
               </div>
               <button class="btn alt" id="closeDayBtn">×</button>
             </div>
@@ -757,7 +747,7 @@
           <div>
             <div class="eyebrow">All trades</div>
             <div class="title">Trades</div>
-            <div class="sub">Sortable, filterable, editable, and optimized for fast review.</div>
+            <div class="sub">Sortable, filterable, editable, and built for fast review.</div>
           </div>
           <div class="toolbar">
             <button class="btn alt" id="importBtn">Import CSV / PDF</button>
@@ -824,15 +814,15 @@
 
         <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;">
           <div class="card">
-            <div class="w-title">Quick start <span class="info" data-tip="First steps">?</span></div>
+            <div class="w-title" data-tip="First-time workflow">Quick Start</div>
             <div class="note">Import, log, export.</div>
           </div>
           <div class="card">
-            <div class="w-title">Privacy <span class="info" data-tip="Local-first storage">?</span></div>
+            <div class="w-title" data-tip="Local-first storage and backup">Privacy</div>
             <div class="note">Browser-only, no cloud database.</div>
           </div>
           <div class="card" style="grid-column:span 2;">
-            <div class="w-title">Product notes <span class="info" data-tip="Release notes and support">?</span></div>
+            <div class="w-title" data-tip="Release notes and support details">Product Notes</div>
             <div class="note">Use this space for version notes and support details.</div>
           </div>
         </div>
@@ -914,6 +904,12 @@
               <div class="row-content"><div class="row-pnl-line"><span class="row-pnl">+$95.00</span><span class="row-trade-count">1 trade</span></div><div class="row-journal-preview">Patient entry.</div></div>
               <div class="row-meta-col"><div class="row-symbols">AMD</div></div>
             </div>
+            <div class="row-day">
+              <div class="row-date-col"><div class="row-date-num">04</div><div class="row-date-dow">Thu</div></div>
+              <div class="row-bar r"></div>
+              <div class="row-content"><div class="row-pnl-line"><span class="row-pnl">-$60.00</span><span class="row-trade-count">1 trade</span></div><div class="row-journal-preview">Stopped out fast.</div></div>
+              <div class="row-meta-col"><div class="row-symbols">SPY</div></div>
+            </div>
           </div>`;
         return;
       }
@@ -929,6 +925,7 @@
           <div class="day green"><div class="n">4</div><div><div class="p">+$95.00</div><div class="c">1 trade</div></div></div>
           <div class="day green"><div class="n">5</div><div><div class="p">+$240.00</div><div class="c">2 trades</div></div></div>
           <div class="day red"><div class="n">6</div><div><div class="p">-$60.00</div><div class="c">1 trade</div></div></div>
+          <div class="day"><div class="n">7</div><div><div class="c">Weekend</div></div></div>
         </div>`;
     }
 
